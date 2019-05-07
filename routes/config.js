@@ -3,7 +3,8 @@ let config = {
     user    : 'root',
     password: 'root',
     database: 'unilever',
-    port:8889
+    port:8889,
+    multipleStatements: true
   };
  
   module.exports = config;
