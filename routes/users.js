@@ -8,7 +8,8 @@ var multiparty = require('multiparty');
 //var request = require('request');
 
 /* GET users listing. */
-router.get('/time', function(req, res, next) {  
+/*
+router.post('/time', function(req, res, next) {  
 
   var conn = mysql.createConnection(config);  
   var sqlQuery = 'SELECT NOW()';
@@ -22,13 +23,61 @@ router.get('/time', function(req, res, next) {
       }
       else{
         console.log("Resultados " + JSON.stringify(results));
-        res.send('Results' +  results.Resultados);
+        res.render('index', { title:  results});
       }      
 
       conn.end();
   });
 
   //res.send(":D");
+});*/
+
+
+router.post('/vengadores',function(req,res,next){
+
+  sqlQuery = "CALL REUNIR_VENGADORES(?,?)";
+  connection = mysql.createConnection(config);
+
+  empleado = req.body.empleado;
+  proyecto = req.body.proyecto;
+
+  console.log(empleado + " " + proyecto);
+
+  connection.query(sqlQuery,[empleado,proyecto],(error,results,fields)=>{
+
+    if(error)
+    {
+      console.log(error);
+    }{
+      console.log(results);
+      res.send(results);
+    }
+  });
+
+});
+
+router.post('/proyectos',function(req,res,next){
+
+        sqlQuery = "SELECT datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO FROM datawarehouse WHERE datawarehouse.ID_PROJECTO = ? AND (datawarehouse.ENEATIPO = 1 OR datawarehouse.ENEATIPO = 7 OR datawarehouse.ENEATIPO = 8) GROUP BY datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO";
+        //sqlQuery = "SELECT * FROM Project";
+        connection = mysql.createConnection(config);
+        
+        
+        console.log(req.body.key);
+        
+        connection.query(sqlQuery,[req.body.key],(error,results,fields)=>
+        {
+          //console.log(sqlQuery);
+          if(error)
+          {
+            console.log(error);
+            res.send(error);
+          }else{
+              //console.log("Aqui");
+              console.log(results);
+              res.send(results);  
+          }                  
+        }); 
 });
 
 router.post('/data',function(req,res,next) {
@@ -47,6 +96,13 @@ router.post('/data',function(req,res,next) {
   var form = new multiparty.Form();
 	  
   form.parse(req, function(err, fields, files) {
+        
+
+        if(files.archivoExcel[0].size != 0)
+        {
+        console.log("Va a estart null");
+
+
         console.log("Files " + files); // do whatever you want with uploaded file(s)
         var wb = XLSX.readFile(files.archivoExcel[0].path);
  
@@ -60,29 +116,33 @@ router.post('/data',function(req,res,next) {
       });
 
       
-
-
-
       loss = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
-      for(i = 0; i < loss.length; i++)
-      {
-        connection = mysql.createConnection(config);  
-        
-        sqlQuery = "CALL NUEVA_LOSS(?);"
-        var stringLoss = loss[i][0];
-        console.log(i + " : " + stringLoss);
-        connection.query(sqlQuery,[stringLoss],(error,results,fields) =>
-        {
-          //console.log(stringLoss);
-          if(error)
-            {
-              console.log("Error");
-              res.send('Error' +  error);
-            }                          
-        });
 
+      sqlQueryLoss = "";
+      paramsLoss = [];
+
+      for(i = 0; i < loss.length; i++)
+      {                
+       
+        var stringLoss = loss[i][0];
+        paramsLoss.push(stringLoss);
+        sqlQuery = "CALL NUEVA_LOSS(\'"+stringLoss+"\');"
+        sqlQueryLoss = sqlQueryLoss +  sqlQuery;
+
+        //console.log(i + " : " + stringLoss);      
         //console.log("Loss " + loss[i][0]);
       }
+
+      connection = mysql.createConnection(config);  
+      connection.query(sqlQueryLoss,(error,results,fields) =>
+      {
+        //console.log(stringLoss);
+        if(error)
+          {
+            console.log(error);              
+          }                          
+      });
+
       //console.log(data);
 
 
@@ -100,7 +160,7 @@ router.post('/data',function(req,res,next) {
             case 0:
             {
               if(tools[i][j] != undefined){
-                console.log(j + " " + tools[i][j]);
+                //console.log(j + " " + tools[i][j]);
 
               //connection = mysql.createConnection(config);  
               sqlQuery = "CALL NUEVA_TOOL(1,'"+ tools[i][j] +"');";
@@ -112,7 +172,7 @@ router.post('/data',function(req,res,next) {
             case 1:
             {
               if(tools[i][j] != undefined){
-                console.log(j + " " + tools[i][j]);
+                //console.log(j + " " + tools[i][j]);
               
               //connection = mysql.createConnection(config);  
               sqlQuery = "CALL NUEVA_TOOL(2,'"+ tools[i][j] +"');";
@@ -124,7 +184,7 @@ router.post('/data',function(req,res,next) {
             case 2:
             {
               if(tools[i][j] != undefined){
-                console.log(j + " " + tools[i][j]);
+                //console.log(j + " " + tools[i][j]);
               
               //connection = mysql.createConnection(config);  
               sqlQuery = "CALL NUEVA_TOOL(3,'"+ tools[i][j] +"');";
@@ -138,21 +198,44 @@ router.post('/data',function(req,res,next) {
       }
 
       connectionTools = mysql.createConnection(config);
-      connection.query(superQueryTools);
-      connection.end();
-
-
+      connectionTools.query(superQueryTools,(error,results,fields)=>{
+        if(error)
+        {
+          console.log(error);
+        }
+      });
+      connectionTools.end();
 
     
       var projects = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[2]], {header:1});
+      sqlQueryProjects = "";
+      projectsParams = [];
 
       for(i = 1; i < projects.length; i++)
       {
-        connection = mysql.createConnection(config);  
-        sqlQuery = "CALL NUEVO_PROJECT(?,?)";
-        connection.query(sqlQuery,[projects[i][0],projects[i][1]]);
-        console.log("Project " + projects[i][0] + " Saving " + projects[i][1]);
+                
+        str1 = projects[i][0];
+        str2 = projects[i][1];
+
+        projectsParams.push(str1);
+        projectsParams.push(str2);
+
+        sqlQuery = "CALL NUEVO_PROJECT(?,?);";
+        sqlQueryProjects = sqlQueryProjects + sqlQuery;        
+        
+
+        //console.log("Project " + projects[i][0] + " Saving " + projects[i][1]);
       }
+
+      connectionProjects = mysql.createConnection(config);  
+      connectionProjects.query(sqlQueryProjects,projectsParams,(error,results,fields)=>
+      {
+        if(error)
+        {
+          console.log(error);
+        }
+      });
+      connectionProjects.end();
 
 
 
@@ -162,7 +245,7 @@ router.post('/data',function(req,res,next) {
       {        
         sqlQuery = "CALL NUEVO_EMPLEADO(\'" + employees[i][3] + "\',\'" + employees[i][0] + "\',\'" + employees[i][1] + "\',\'" + employees[i][2] + "\');";        
         superQueryEmployees = superQueryEmployees + sqlQuery;       
-        console.log("Número " + employees[i][0] + " Nombre " + employees[i][1]  + " Puesto " + employees[i][2] + " Eneatipo "  + employees[i][3]);
+        //console.log("Número " + employees[i][0] + " Nombre " + employees[i][1]  + " Puesto " + employees[i][2] + " Eneatipo "  + employees[i][3]);
       }
 
       connectionEmployees = mysql.createConnection(config);  
@@ -186,13 +269,13 @@ router.post('/data',function(req,res,next) {
             //sqlQuery = "INSERT INTO `LossVSTool`(`idLoss`,`idTool`) VALUES (\'"+lossVStools[i][1]+"\',\'"+lossVStools[2][j]+"\');"
             superQuery = superQuery + sqlQuery;            
             counter++;
-            console.log("Loss vs tool :::  Loss: " + lossVStools[i][1] + " Tool: " + lossVStools[2][j] + " Activo " + lossVStools[i][j]);            
+            //console.log("Loss vs tool :::  Loss: " + lossVStools[i][1] + " Tool: " + lossVStools[2][j] + " Activo " + lossVStools[i][j]);            
           }
         }        
       }
-      console.log("total " + counter);
-      console.log(parameters);
-      console.log(superQuery);
+      //console.log("total " + counter);
+      //console.log(parameters);
+      //console.log(superQuery);
       connectionLossVStools = mysql.createConnection(config);  
       connectionLossVStools.query(superQuery,parameters,(error,results,fields) => {
         if(error)
@@ -225,12 +308,12 @@ router.post('/data',function(req,res,next) {
 
            superQueryProjectVSLoss =  superQueryProjectVSLoss + sqlQuery;
             //console.log("Project vs loss: " + "Project: " + projectsVSloss[i][1] + " Loss: " + projectsVSloss[i][j]);
-            console.log(sqlQuery);
+            //console.log(sqlQuery);
           }
         }
       }
 
-      console.log(superQueryProjectVSLoss);
+      //console.log(superQueryProjectVSLoss);
       connectionprojectsVSloss = mysql.createConnection(config);  
       connectionprojectsVSloss.query(superQueryProjectVSLoss,paramsProjectVSLoss,(error,results,fields) => {
         if(error)
@@ -253,7 +336,7 @@ router.post('/data',function(req,res,next) {
             sqlQuery  = "CALL NUEVO_PERSONEL_VS_TOOL(?,?);";
             superQueryPersonelVSTools = superQueryPersonelVSTools + sqlQuery;
             paramsPersonelVSTools.push(personelVStools[i][0],personelVStools[2][j]);
-             console.log("Personel vs tool personel: " + personelVStools[i][0] + " Tool " + personelVStools[2][j] + " Activo " + personelVStools[i][j]);
+             //console.log("Personel vs tool personel: " + personelVStools[i][0] + " Tool " + personelVStools[2][j] + " Activo " + personelVStools[i][j]);
           }
         }        
       }
@@ -262,9 +345,11 @@ router.post('/data',function(req,res,next) {
       connectionPersonelVSTools.query(superQueryPersonelVSTools,paramsPersonelVSTools,(error,results,fields) => {
         if(error)
           console.log(error);
+        
       });
       connectionPersonelVSTools.end();
 
+      
       /*
       var eneagrama = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[7]], {header:1});
       var parametersEneagrama = [];
@@ -284,12 +369,56 @@ router.post('/data',function(req,res,next) {
           console.log(error);
       });
       connectionEneagrama.end();
-*/
+      */
       
 
-      res.send(":D");
+      /*
+      sqlQuery = 'CALL CREAR_VISTA();';
+      connectionView = mysql.createConnection(config);
+
+      connectionView.query(sqlQuery,(error,results,fields)=>{
+          if(error)
+          {
+            res.send(error);
+            console.log(error);
+          }
+
+          res.render('equipos');
+      });  
+
+      connectionView.end();
+  */
+
+            
+      console.log("Termina if");
+
+
+      //sqlQuery = "SELECT datawarehouse.PROYECTO,datawarehouse.ID_PROJECTO FROM datawarehouse GROUP BY datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO";
+      sqlQuery = "SELECT * FROM Project";
+      connection = mysql.createConnection(config);
+      connection.query(sqlQuery,(error,results,fields)=>
+      {
+        if(error)
+        {
+          res.send(error);
+        }
+
+        //console.log("AQui");
+        //console.log(results);
+        //res.send('@');
+        res.send(results);
+      });      
+    }//Termina if
+    else
+    { 
+       res.render('index.ejs');
+    }
+
   });
 
+//    console.log('vacio');
+  //  res.render('error.ejs');
 });
+
 
 module.exports = router;
