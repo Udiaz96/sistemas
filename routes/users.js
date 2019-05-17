@@ -32,6 +32,27 @@ router.post('/time', function(req, res, next) {
   //res.send(":D");
 });*/
 
+router.post('/apoyo',function(req,res,next){
+  sqlQuery = "CALL REUNIR_HEROES_DE_APOYO(?,?)";
+  connection = mysql.createConnection(config);
+
+  empleado = req.body.empleado;
+  proyecto = req.body.proyecto;
+
+  console.log(empleado + " " + proyecto);
+
+  connection.query(sqlQuery,[empleado,proyecto],(error,results,fields)=>{
+
+    if(error)
+    {
+      console.log(error);
+    }{
+      console.log(results);
+      res.send(results);
+    }
+  });
+
+});
 
 router.post('/vengadores',function(req,res,next){
 
@@ -58,7 +79,7 @@ router.post('/vengadores',function(req,res,next){
 
 router.post('/proyectos',function(req,res,next){
 
-        sqlQuery = "SELECT datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO FROM datawarehouse WHERE datawarehouse.ID_PROJECTO = ? AND (datawarehouse.ENEATIPO = 1 OR datawarehouse.ENEATIPO = 7 OR datawarehouse.ENEATIPO = 8) GROUP BY datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO";
+        sqlQuery = "SELECT datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO,datawarehouse.ENEATIPO FROM datawarehouse WHERE datawarehouse.ID_PROJECTO = ? AND (datawarehouse.ENEATIPO = 1 OR datawarehouse.ENEATIPO = 7 OR datawarehouse.ENEATIPO = 8) GROUP BY datawarehouse.PROYECTO, datawarehouse.ID_PROJECTO, datawarehouse.EMPLEADO, datawarehouse.ID_EMPLEADO, datawarehouse.ENEATIPO";
         //sqlQuery = "SELECT * FROM Project";
         connection = mysql.createConnection(config);
         

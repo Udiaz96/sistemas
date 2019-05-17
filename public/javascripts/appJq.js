@@ -35,6 +35,8 @@ $(document).ready(function() {
     proyecto = $("#inputGroupSelect01").val();
     $("#inputSelectLeader").empty();
     $("#tbody-subleaders").empty();
+    $("#tbody-Equipo").empty();
+
     console.log(proyecto);
     $.ajax({
       url: "users/proyectos",
@@ -49,7 +51,8 @@ $(document).ready(function() {
         var select = $("#inputSelectLeader");
 
         if (response.length > 0) {
-          $("#projectTitle").text(response[0].PROYECTO);
+          $("#projectTitle").text("Proyecto: " + response[0].PROYECTO);
+          $("#eneatipoLider").text("Eneatipo: " + response[0].ENEATIPO);
         }
 
         for (i = 0; i < response.length; i++) {
@@ -67,6 +70,8 @@ $(document).ready(function() {
   $("#inputSelectLeader").change(function() {
     empleado = $("#inputSelectLeader").val();
     proyecto = $("#inputGroupSelect01").val();
+    $("#tbody-Equipo").empty();
+
     console.log(empleado + " " + proyecto);
 
     $("#tbody-subleaders").empty();
@@ -84,40 +89,73 @@ $(document).ready(function() {
       success: function(response) {
         var table = $("#tbody-subleaders");
 
-        if ($('#tbody-subleaders').is(':empty')){
-          
+        if ($("#tbody-subleaders").is(":empty")) {
           for (i = 0; i < response[0].length; i++) {
-           
             var row = document.createElement("tr");
 
             var td1 = document.createElement("td");
-            var td2 = document.createElement("td");
-            var td3 = document.createElement("td");
-            var td4 = document.createElement("td");
-
-
-            td1.innerHTML = response[0][i].NAME_LEADER;
-            td2.innerHTML = response[0][i].ID_ENEATIPO_LIDER;
-            td3.innerHTML = response[0][i].EMPLEADO;
-            td4.innerHTML = response[0][i].ENEATIPO;
+            var td2 = document.createElement("td");            
+            
+            td1.innerHTML = response[0][i].EMPLEADO;
+            td2.innerHTML = response[0][i].ENEATIPO;
 
             row.append(td1);
-            row.append(td2);
-            row.append(td3);
-            row.append(td4);
+            row.append(td2);            
 
             //option.value = response[i].ID_EMPLEADO;
             //option.innerHTML = response[i].EMPLEADO;
             table.append(row);
-            console.log(response[0][i].EMPLEADO + " " + response[0][i].ENEATIPO);
-        }
-
-        console.log(response);
-
-  
+            console.log(
+              response[0][i].EMPLEADO + " " + response[0][i].ENEATIPO
+            );
           }
+
+          console.log(response);
+          empleado = $("#inputSelectLeader").val();
+          proyecto = $("#inputGroupSelect01").val();
+
+          console.log("Apoyo: " + empleado  + " " + proyecto );
+
+
+          $.ajax({
+            url: "users/apoyo",
+            method: "POST",
+            data: {
+              empleado: empleado,
+              proyecto: proyecto
+            },
+            complete: function() {
+              console.log("Completo");
+            },
+            success: function(response) {
+              console.log(response);
+              console.log(response[0]);
+              var table = $("#tbody-Equipo");
+              
+                for (i = 0; i < response[0].length; i++) {
+                  var row = document.createElement("tr");
+      
+                  var td1 = document.createElement("td");
+                  var td2 = document.createElement("td");                  
+                        
+                  td1.innerHTML = response[0][i].EMPLEADO;
+                  td2.innerHTML = response[0][i].ENEATIPO;
+      
+                  row.append(td1);
+                  row.append(td2);                        
+                  
+                  
+                  table.append(row);
+                  
+                  console.log("Resto de equipo " + response[0][1].EMPLEADO + " " + response[0][1].ENEATIPO);
+            }
+          
+          
+          }
+        });
         }
-        //$('#projectTitle').text(response[0].PROYECTO);      
+      }
+      
     });
   });
 });
