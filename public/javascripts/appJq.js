@@ -83,9 +83,9 @@ $(document).ready(function() {
       },
       success: function(response) {
         var table = $("#tbody-subleaders");
-        console.log(response);
 
-  
+        if ($('#tbody-subleaders').is(':empty')){
+          
           for (i = 0; i < response[0].length; i++) {
            
             var row = document.createElement("tr");
@@ -110,6 +110,11 @@ $(document).ready(function() {
             //option.innerHTML = response[i].EMPLEADO;
             table.append(row);
             console.log(response[0][i].EMPLEADO + " " + response[0][i].ENEATIPO);
+        }
+
+        console.log(response);
+
+  
           }
         }
         //$('#projectTitle').text(response[0].PROYECTO);      
