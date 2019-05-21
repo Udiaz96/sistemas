@@ -50,6 +50,7 @@ $(document).ready(function() {
       success: function(response) {
         var select = $("#inputSelectLeader");
 
+        if($("#inputSelectLeader").is(":empty")){
         if (response.length > 0) {
           $("#projectTitle").text("Proyecto: " + response[0].PROYECTO);
           $("#eneatipoLider").text("Eneatipo: " + response[0].ENEATIPO);
@@ -64,6 +65,7 @@ $(document).ready(function() {
 
         console.log(response);
       }
+    }
     });
   });
 
@@ -71,6 +73,7 @@ $(document).ready(function() {
     empleado = $("#inputSelectLeader").val();
     proyecto = $("#inputGroupSelect01").val();
     $("#tbody-Equipo").empty();
+    
 
     console.log(empleado + " " + proyecto);
 
@@ -87,10 +90,17 @@ $(document).ready(function() {
         console.log("Completo");
       },
       success: function(response) {
+
+      
+        
+
         var table = $("#tbody-subleaders");
 
         if ($("#tbody-subleaders").is(":empty")) {
           for (i = 0; i < response[0].length; i++) {
+
+            $("#eneatipoLider").text("Eneatipo: " + response[0][i].ID_ENEATIPO_LIDER);
+
             var row = document.createElement("tr");
 
             var td1 = document.createElement("td");
@@ -115,7 +125,6 @@ $(document).ready(function() {
           proyecto = $("#inputGroupSelect01").val();
 
           console.log("Apoyo: " + empleado  + " " + proyecto );
-
 
           $.ajax({
             url: "users/apoyo",

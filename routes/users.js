@@ -272,10 +272,6 @@ router.post('/data',function(req,res,next) {
       connectionEmployees = mysql.createConnection(config);  
       connectionEmployees.query(superQueryEmployees);
 
-
-
-
-
       var lossVStools = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[4]], {header:1});
       var parameters = [];
       //var superQuery = 'CALL NUEVO_LOSS_VS_TOOL(?,?);';  
