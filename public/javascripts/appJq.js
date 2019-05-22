@@ -31,7 +31,9 @@ $(document).ready(function() {
     });
   });
 
+  var leaders = [];
   $("#inputGroupSelect01").change(function() {
+    leaders = [];
     proyecto = $("#inputGroupSelect01").val();
     $("#inputSelectLeader").empty();
     $("#tbody-subleaders").empty();
@@ -52,13 +54,14 @@ $(document).ready(function() {
 
         if($("#inputSelectLeader").is(":empty")){
         if (response.length > 0) {
+          leaders = response;
           $("#projectTitle").text("Proyecto: " + response[0].PROYECTO);
           $("#eneatipoLider").text("Eneatipo: " + response[0].ENEATIPO);
         }
 
         for (i = 0; i < response.length; i++) {
           var option = document.createElement("option");
-          option.value = response[i].ID_EMPLEADO;
+          option.value = response[i].ID_EMPLEADO;          
           option.innerHTML = response[i].EMPLEADO;
           select.append(option);
         }
@@ -71,7 +74,7 @@ $(document).ready(function() {
 
   $("#inputSelectLeader").change(function() {
     empleado = $("#inputSelectLeader").val();
-    proyecto = $("#inputGroupSelect01").val();
+    proyecto = $("#inputGroupSelect01").val();        
     $("#tbody-Equipo").empty();
     
 
