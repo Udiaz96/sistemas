@@ -1,9 +1,9 @@
 let config = {
     host    : 'localhost',
     user    : 'root',
-    password: '',
+    password: 'root',
     database: 'unilever',
-    port:3306,
+    port:8889,
     multipleStatements: true
   };
  

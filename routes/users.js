@@ -32,6 +32,107 @@ router.post('/time', function(req, res, next) {
   //res.send(":D");
 });*/
 
+router.post('/empleades',function(req,res){
+  sqlQuery = "SELECT Empleado.idEmpleado FROM Empleado;";
+  connection = mysql.createConnection(config);
+  connection.query(sqlQuery,(error,results,fields)=>{
+  if(error)
+  {
+    console.log(error);
+  }{    
+    ids = []
+    for(i = 0; i < results.length; i++)
+    {
+      ids.push(results[i].idEmpleado);
+    }
+    res.send(ids);
+  }
+  });
+});
+
+router.post('/empleatipos',function(req,res){
+  sqlQuery = "SELECT Eneagrama.nombre, Empleado.idEmpleado FROM Eneagrama INNER JOIN Empleado WHERE Empleado.idEneagrama = Eneagrama.idEneagrama ";
+  connection = mysql.createConnection(config);
+  
+  connection.query(sqlQuery,(error,results,fields)=>{
+
+  if(error)
+  {
+    console.log(error);
+  }  
+    
+    
+    empleados = [
+      {
+        "1":[],
+        "2":[],
+        "3":[],
+        "4":[],
+        "5":[],
+        "6":[],
+        "7":[],
+        "8":[],
+        "9":[]
+      }
+    ];
+    eneatipo = 1;
+    for(i = 0; i < results.length; i++)
+    {      
+      console.log(results[i].nombre + " " + results[i].idEmpleado);      
+      switch(results[i].nombre){
+          case "1":
+          {
+            empleados[0][1].push(results[i].idEmpleado);
+            break;
+          }
+          case "2":
+          {
+            empleados[0][2].push(results[i].idEmpleado);
+            break;
+          }
+          case "3":
+          {
+            empleados[0][3].push(results[i].idEmpleado);
+            break;
+          }
+          case "4":
+          {
+            empleados[0][4].push(results[i].idEmpleado);
+            break;
+          }
+          case "5":
+          {
+            empleados[0][5].push(results[i].idEmpleado);
+            break;
+          }
+          case "6":
+          {
+            empleados[0][6].push(results[i].idEmpleado);
+            break;
+          }
+          case "7":
+          {
+            empleados[0][7].push(results[i].idEmpleado);
+            break;
+          }
+          case "8":
+          {
+            empleados[0][8].push(results[i].idEmpleado);
+            break;
+          }
+          case "9":
+          {
+            empleados[0][9].push(results[i].idEmpleado);
+            break;
+          }
+
+      }      
+  }
+  res.send(empleados);  
+  });
+
+});
+
 router.post('/apoyo',function(req,res,next){
   sqlQuery = "CALL REUNIR_HEROES_DE_APOYO(?,?)";
   connection = mysql.createConnection(config);
