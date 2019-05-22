@@ -1,7 +1,7 @@
 let config = {
     host    : 'localhost',
     user    : 'root',
-    password: 'root',
+    password: '',
     database: 'unilever',
     port:8889,
     multipleStatements: true
