@@ -31,7 +31,9 @@ $(document).ready(function() {
     });
   });
 
+  var leaders = [];
   $("#inputGroupSelect01").change(function() {
+    leaders = [];
     proyecto = $("#inputGroupSelect01").val();
     $("#inputSelectLeader").empty();
     $("#tbody-subleaders").empty();
@@ -50,26 +52,29 @@ $(document).ready(function() {
       success: function(response) {
         var select = $("#inputSelectLeader");
 
+        if($("#inputSelectLeader").is(":empty")){
         if (response.length > 0) {
+          leaders = response;
           $("#projectTitle").text("Proyecto: " + response[0].PROYECTO);
           $("#eneatipoLider").text("Eneatipo: " + response[0].ENEATIPO);
         }
 
         for (i = 0; i < response.length; i++) {
           var option = document.createElement("option");
-          option.value = response[i].ID_EMPLEADO;
+          option.value = response[i].ID_EMPLEADO;          
           option.innerHTML = response[i].EMPLEADO;
           select.append(option);
         }
 
         console.log(response);
       }
+    }
     });
   });
 
   $("#inputSelectLeader").change(function() {
     empleado = $("#inputSelectLeader").val();
-    proyecto = $("#inputGroupSelect01").val();
+    proyecto = $("#inputGroupSelect01").val();        
     $("#tbody-Equipo").empty();
 
     console.log(empleado + " " + proyecto);
@@ -91,6 +96,7 @@ $(document).ready(function() {
 
         if ($("#tbody-subleaders").is(":empty")) {
           for (i = 0; i < response[0].length; i++) {
+            $("#eneatipoLider").text("Eneatipo: " + response[0][i].ID_ENEATIPO_LIDER);
             var row = document.createElement("tr");
 
             var td1 = document.createElement("td");
