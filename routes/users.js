@@ -51,7 +51,7 @@ router.post('/empleades',function(req,res){
 });
 
 router.post('/empleatipos',function(req,res){
-  sqlQuery = "SELECT * FROM Triada;";
+  sqlQuery = "call OBTENER_COMPATIBILIDAD();";
   connection = mysql.createConnection(config);
   
   connection.query(sqlQuery,(error,results,fields)=>{
@@ -61,7 +61,8 @@ router.post('/empleatipos',function(req,res){
     console.log(error);
   }  
     
-    
+  console.log(results[0]);    
+  //console.log(results[0].length);
     empleados = [
       {
         "1":[],
@@ -76,80 +77,53 @@ router.post('/empleatipos',function(req,res){
       }
     ];
     eneatipo = 1;
-    for(i = 0; i < results.length; i++)
-    {      
-      //console.log(results[i].nombre + " " + results[i].idEmpleado);      
-      switch(results[i].idEneagrama){
+    for(i = 0; i < results[0].length; i++)
+    {               
+      console.log(results[0][i].eneatipo + " " + results[0][i].eneatipoCompatible);
+      switch(results[0][i].eneatipo){
           case 1:
           {
-            empleados[0][1].push(results[i].idEneagrama2);
-            empleados[0][1].push(results[i].idEneagrama3);
-            empleados[0][1].push(results[i].idEneagrama4);
-            empleados[0][1].push(results[i].idEneagrama5);
+            empleados[0][1].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 2:
           {
-            empleados[0][2].push(results[i].idEneagrama2);
-            empleados[0][2].push(results[i].idEneagrama3);
-            empleados[0][2].push(results[i].idEneagrama4);
-            empleados[0][2].push(results[i].idEneagrama5);
+            empleados[0][2].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 3:
           {
-            empleados[0][3].push(results[i].idEneagrama2);
-            empleados[0][3].push(results[i].idEneagrama3);
-            empleados[0][3].push(results[i].idEneagrama4);
-            empleados[0][3].push(results[i].idEneagrama5);
+            empleados[0][3].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 4:
           {
-            empleados[0][4].push(results[i].idEneagrama2);
-            empleados[0][4].push(results[i].idEneagrama3);
-            empleados[0][4].push(results[i].idEneagrama4);
-            empleados[0][4].push(results[i].idEneagrama5);
+            empleados[0][4].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 5:
           {
-            empleados[0][5].push(results[i].idEneagrama2);
-            empleados[0][5].push(results[i].idEneagrama3);
-            empleados[0][5].push(results[i].idEneagrama4);
-            empleados[0][5].push(results[i].idEneagrama5);
+            empleados[0][5].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 6:
           {
-            empleados[0][6].push(results[i].idEneagrama2);
-            empleados[0][6].push(results[i].idEneagrama3);
-            empleados[0][6].push(results[i].idEneagrama4);
-            empleados[0][6].push(results[i].idEneagrama5);
+            empleados[0][6].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 7:
           {
-            empleados[0][7].push(results[i].idEneagrama2);
-            empleados[0][7].push(results[i].idEneagrama3);
-            empleados[0][7].push(results[i].idEneagrama4);
-            empleados[0][7].push(results[i].idEneagrama5);
+            empleados[0][7].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 8:
           {
-            empleados[0][8].push(results[i].idEneagrama2);
-            empleados[0][8].push(results[i].idEneagrama3);
-            empleados[0][8].push(results[i].idEneagrama4);
-            empleados[0][8].push(results[i].idEneagrama5);
+            empleados[0][8].push(results[0][i].eneatipoCompatible);            
             break;
           }
           case 9:
           {
-            empleados[0][9].push(results[i].idEneagrama2);
-            empleados[0][9].push(results[i].idEneagrama3);
-            empleados[0][9].push(results[i].idEneagrama4);
-            empleados[0][9].push(results[i].idEneagrama5);
+            empleados[0][9].push(results[0][i].eneatipoCompatible);            
             break;
           }
 
