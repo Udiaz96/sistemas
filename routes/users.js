@@ -63,7 +63,7 @@ router.post('/empleades',function(req,res){
 });
 
 router.post('/empleatipos',function(req,res){
-  sqlQuery = "SELECT Eneagrama.nombre, Empleado.idEmpleado FROM Eneagrama INNER JOIN Empleado WHERE Empleado.idEneagrama = Eneagrama.idEneagrama ";
+  sqlQuery = "SELECT * FROM Triada;";
   connection = mysql.createConnection(config);
   
   connection.query(sqlQuery,(error,results,fields)=>{
@@ -90,51 +90,78 @@ router.post('/empleatipos',function(req,res){
     eneatipo = 1;
     for(i = 0; i < results.length; i++)
     {      
-      console.log(results[i].nombre + " " + results[i].idEmpleado);      
-      switch(results[i].nombre){
-          case "1":
+      //console.log(results[i].nombre + " " + results[i].idEmpleado);      
+      switch(results[i].idEneagrama){
+          case 1:
           {
-            empleados[0][1].push(results[i].idEmpleado);
+            empleados[0][1].push(results[i].idEneagrama2);
+            empleados[0][1].push(results[i].idEneagrama3);
+            empleados[0][1].push(results[i].idEneagrama4);
+            empleados[0][1].push(results[i].idEneagrama5);
             break;
           }
-          case "2":
+          case 2:
           {
-            empleados[0][2].push(results[i].idEmpleado);
+            empleados[0][2].push(results[i].idEneagrama2);
+            empleados[0][2].push(results[i].idEneagrama3);
+            empleados[0][2].push(results[i].idEneagrama4);
+            empleados[0][2].push(results[i].idEneagrama5);
             break;
           }
-          case "3":
+          case 3:
           {
-            empleados[0][3].push(results[i].idEmpleado);
+            empleados[0][3].push(results[i].idEneagrama2);
+            empleados[0][3].push(results[i].idEneagrama3);
+            empleados[0][3].push(results[i].idEneagrama4);
+            empleados[0][3].push(results[i].idEneagrama5);
             break;
           }
-          case "4":
+          case 4:
           {
-            empleados[0][4].push(results[i].idEmpleado);
+            empleados[0][4].push(results[i].idEneagrama2);
+            empleados[0][4].push(results[i].idEneagrama3);
+            empleados[0][4].push(results[i].idEneagrama4);
+            empleados[0][4].push(results[i].idEneagrama5);
             break;
           }
-          case "5":
+          case 5:
           {
-            empleados[0][5].push(results[i].idEmpleado);
+            empleados[0][5].push(results[i].idEneagrama2);
+            empleados[0][5].push(results[i].idEneagrama3);
+            empleados[0][5].push(results[i].idEneagrama4);
+            empleados[0][5].push(results[i].idEneagrama5);
             break;
           }
-          case "6":
+          case 6:
           {
-            empleados[0][6].push(results[i].idEmpleado);
+            empleados[0][6].push(results[i].idEneagrama2);
+            empleados[0][6].push(results[i].idEneagrama3);
+            empleados[0][6].push(results[i].idEneagrama4);
+            empleados[0][6].push(results[i].idEneagrama5);
             break;
           }
-          case "7":
+          case 7:
           {
-            empleados[0][7].push(results[i].idEmpleado);
+            empleados[0][7].push(results[i].idEneagrama2);
+            empleados[0][7].push(results[i].idEneagrama3);
+            empleados[0][7].push(results[i].idEneagrama4);
+            empleados[0][7].push(results[i].idEneagrama5);
             break;
           }
-          case "8":
+          case 8:
           {
-            empleados[0][8].push(results[i].idEmpleado);
+            empleados[0][8].push(results[i].idEneagrama2);
+            empleados[0][8].push(results[i].idEneagrama3);
+            empleados[0][8].push(results[i].idEneagrama4);
+            empleados[0][8].push(results[i].idEneagrama5);
             break;
           }
-          case "9":
+          case 9:
           {
-            empleados[0][9].push(results[i].idEmpleado);
+            empleados[0][9].push(results[i].idEneagrama2);
+            empleados[0][9].push(results[i].idEneagrama3);
+            empleados[0][9].push(results[i].idEneagrama4);
+            empleados[0][9].push(results[i].idEneagrama5);
             break;
           }
 
