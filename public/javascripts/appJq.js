@@ -72,15 +72,42 @@ $(document).ready(function() {
     });
   });
 
+  $('#buttonIniciarEquipos').click(function(){
+
+    empleado = $("#inputSelectLeader").val();     
+    tamano = $("#idTamano").val();
+    
+    $.ajax({
+      url: "users/formarEquipos",
+      method: "POST",
+      data: {
+        idLeader: empleado,
+        tamano: tamano
+      },
+      complete: function() {
+        console.log("Completo");
+      },
+      success: function(response) {
+
+      console.log("Formar equipo " + response);
+        
+      }
+    });
+  });
+
   $("#inputSelectLeader").change(function() {
     empleado = $("#inputSelectLeader").val();
-    proyecto = $("#inputGroupSelect01").val();        
+    proyecto = $("#inputGroupSelect01").val();  
+    tamano = $("#idTamano").val();
     $("#tbody-Equipo").empty();
     
 
     console.log(empleado + " " + proyecto);
 
     $("#tbody-subleaders").empty();
+
+
+
 
     $.ajax({
       url: "users/vengadores",
