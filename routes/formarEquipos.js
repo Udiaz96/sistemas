@@ -4,6 +4,8 @@ var config = require('./config.js');
 var mysql = require('mysql');
 const Combinatorics = require('js-combinatorics');
 const Heap = require('heap');
+let ListaCompatibles;
+const TablaEmpleadoIsEneatipo = {};
 const MinHeap = new Heap(function cmp(a, b) {
   if (a.h < b.h) {
     return -1;
@@ -19,7 +21,7 @@ router.get('/',function(req,res,next){
     //let empleados = [];
     
     let habilidades = [];
-    let team_members = [];
+    let team_members = {};
     let visit = {}; //Nuestro arreglo de visitados
     sqlQuery = "SElECT * FROM empleadovstool;";
     connection = mysql.createConnection(config);
@@ -41,11 +43,9 @@ router.get('/',function(req,res,next){
             //Obtenemos la lista de empleados compatibles por cada eneatipo
             sqlQuery = "call OBTENER_COMPATIBILIDAD();";
             connection = mysql.createConnection(config);
-            let ListaCompatibles;
             connection.query(sqlQuery,(error,results,fields)=>{
                 if(!error){
                     ListaCompatibles = [{"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[],"9":[]}];
-                    eneatipo = 1;
                     for(i = 0; i < results[0].length; i++){               
                     //console.log(results[0][i].eneatipo + " " + results[0][i].eneatipoCompatible);
                         switch(results[0][i].eneatipo){
@@ -61,15 +61,30 @@ router.get('/',function(req,res,next){
                         }      
                     }
                     let idTeamLeader = 88;//req.params.idLeader;
-                    let eneatipo = 1; //req.params.eneAtipo;
-                    //Metemos el líder al equipo
-                    team_members.push(idTeamLeader);
-                    //Declaramos el arreglo de trabajadores compatibles con el líder
-                    let compatibles = ListaCompatibles[0][eneatipo];
-                    //Marcamos al líder como visitado
-                    visit[idTeamLeader] = true;
-                    //funcionDePrueba(1,team_members,1,visit,empleados,5);
-                    formar_equipos(1,team_members,1,visit,empleados,5);
+                    sqlQuery = "SELECT * FROM empleado;";
+                    connection = mysql.createConnection(config);
+                    connection.query(sqlQuery,(error,results,fields)=>{
+                        if(!error){
+                            results.forEach(function(element){
+                                TablaEmpleadoIsEneatipo[element.idEmpleado] = element.idEneagrama;
+                            });
+                            //console.log(TablaEmpleadoIsEneatipo);
+                            let eneatipo = TablaEmpleadoIsEneatipo[idTeamLeader];
+                            //Metemos el líder al equipo
+                            team_members[idTeamLeader] = [];
+                            //Declaramos el arreglo de trabajadores compatibles con el líder
+                            let compatibles = ListaCompatibles[0][eneatipo];
+                            //console.log(compatibles);
+                            //Marcamos al líder como visitado
+                            visit[idTeamLeader] = true;
+                            let N = 5;//req.params.LengthTeam;
+                            formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
+                            //funcionDePrueba(1,team_members, idTeamLeader, visit,compatibles,N);
+                            while(!MinHeap.empty()){
+                                console.log(MinHeap.pop());
+                            }
+                        }
+                    });
                 }
             });
         }   
@@ -84,29 +99,31 @@ router.get('/',function(req,res,next){
 //         console.log(team_members);
 //         return;
 //     }
-//     let sqlQuery = "SElECT * FROM empleado;";
-//     connection = mysql.createConnection(config);
-//     connection.query(sqlQuery,[],(error,results,fields)=>{
-//         let ids =[];
-//         results.forEach(function(element){
-//             ids.push(element.idEmpleado)
-//         });
-//         console.log(ids);
-//         team_members.push(idss[0]);
-//         funcionDePrueba(team_length+1,team_members,1,visit,ids,5);
-//     });
+//     compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
+//     console.log(compatibles);
+//     // let sqlQuery = "SElECT * FROM empleado;";
+//     // connection = mysql.createConnection(config);
+//     // connection.query(sqlQuery,[],(error,results,fields)=>{
+//     //     let ids =[];
+//     //     results.forEach(function(element){
+//     //         ids.push(element.idEmpleado)
+//     //     });
+//     //     console.log(ids);
+//     //     team_members.push(idss[0]);
+//     //     funcionDePrueba(team_length+1,team_members,1,visit,ids,5);
+//     // });
 // }  
 function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){ 
     //If we are in a sheet node means we have a team formed
     //So we return that team
+    if(compatibles == null)
+        return;
     if(team_length>N)
         return; 
     //console.log("nodo:",nodo)
     if(team_length == N){
         //console.log(team_members);
         //console.log(JSON.stringify(team_members));
-        
-        let rnd = Math.random() * (100 - 0) + 0; //CalcularHeuristica();
         let tm = Object.assign({},team_members);
         //TeamList.push(tm);
         let tmS = JSON.stringify(tm);
@@ -129,6 +146,7 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
     //console.log(compatibles);
     ///console.log("type compatibles:",typeof compatibles);
     let opciones = Combinatorics.bigCombination(compatibles, k); //We get []Ck combinatorics
+    compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
     if(k == 1){
         while(a = opciones.next()){ 
             let a_aux = a;
@@ -167,8 +185,6 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
                 //console.log("Debería estar en nodo 3 ",nodo);
                 //console.log("Log after 2nd rescursive call",a_aux);
                 visit[a_aux[0]] = visit[a_aux[1]] = false;
-                
-  
             }
         }
     }
@@ -177,24 +193,7 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
     let H = 0; //Heurística Total
     let C = 0; //Heurística de Compatibilidad
     let T = 0; //Heurística de Majo de Tools 
-    
-  }
-  function GetEmployees(){
-    sqlQuery = "SELECT Empleado.idEmpleado FROM Empleado;";
-    connection = mysql.createConnection(config);
-    connection.query(sqlQuery,(error,results,fields)=>{
-    if(error)
-    {
-      console.log(error);
-    }{    
-      ids = []
-      for(i = 0; i < results.length; i++)
-      {
-        ids.push(results[i].idEmpleado);
-      }
-      return ids;
-    }
-    });
+    return  Math.random() * (100 - 5) + 5;
   }
   module.exports = router;
   
