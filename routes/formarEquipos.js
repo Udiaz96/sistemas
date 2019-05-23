@@ -16,8 +16,8 @@ const MinHeap = new Heap(function cmp(a, b) {
 var globalTeamList = [];
 router.get('/',function(req,res,next){
     //Obtenemos todas las tools de cada uno de los empleados
-    let empleados = [];
-    let compatibles = []
+    //let empleados = [];
+    
     let habilidades = [];
     let team_members = [];
     let visit = {}; //Nuestro arreglo de visitados
@@ -32,7 +32,7 @@ router.get('/',function(req,res,next){
                   habilidades[element.idEmpleado] = [];
                   //Es un nuevo empleado, lo marcamos como no visitado
                   visit[element.idEmpleado] = false;
-                  empleados.push(element.idEmpleado);
+                  //empleados.push(element.idEmpleado);
                 }
                 //Insertamos una nueva habilidad del empleado
                 habilidades[element.idEmpleado].push(element.idTool);
@@ -61,8 +61,11 @@ router.get('/',function(req,res,next){
                         }      
                     }
                     let idTeamLeader = 88;//req.params.idLeader;
+                    let eneatipo = 1; //req.params.eneAtipo;
                     //Metemos el líder al equipo
                     team_members.push(idTeamLeader);
+                    //Declaramos el arreglo de trabajadores compatibles con el líder
+                    let compatibles = ListaCompatibles[0][eneatipo];
                     //Marcamos al líder como visitado
                     visit[idTeamLeader] = true;
                     //funcionDePrueba(1,team_members,1,visit,empleados,5);
