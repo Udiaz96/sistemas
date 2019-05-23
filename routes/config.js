@@ -3,7 +3,7 @@ let config = {
     user    : 'root',
     password: '',
     database: 'unilever',
-    port:8889,
+    port:3306,
     multipleStatements: true
   };
  

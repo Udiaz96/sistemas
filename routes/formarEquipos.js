@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var config = require('./config.js');
 var mysql = require('mysql');
-var habilidades = {};
 const Combinatorics = require('js-combinatorics');
 const Heap = require('heap');
 const MinHeap = new Heap(function cmp(a, b) {
@@ -14,37 +14,85 @@ const MinHeap = new Heap(function cmp(a, b) {
   return 0;
 });
 var globalTeamList = [];
-router.get('/formarEquipos',function(req,res,next){
-    let visit = {};
+router.get('/',function(req,res,next){
+    //Obtenemos todas las tools de cada uno de los empleados
+    let empleados = [];
+    let compatibles = []
+    let habilidades = [];
+    let team_members = [];
+    let visit = {}; //Nuestro arreglo de visitados
     sqlQuery = "SElECT * FROM empleadovstool;";
     connection = mysql.createConnection(config);
     connection.query(sqlQuery,[],(error,results,fields)=>{
-      results.forEach(function(element) {
-        if(!(element.idEmpleado in habilidades)){
-          habilidades[element.idEmpleado] = [];
-          //Aprovecho para inicializar mi arreglo de visitados en false
-          visit[element.idEmpleado] = false;
-        }
-        habilidades[element.idEmpleado].push(element.idTool);
-      });
-    
-  
-  
-      
-      //Aqui va todo lo de formar equipos
-      let compatiblesQuery = 'CALL FORMAR_EQUIPO'; //Llamada para los compatibles
-      let compatibles = [];
-      connection.query(compatiblesQuery,[],(error,results,fields)=>{
-          compatibles = results;
-      });
-      let team_members = [];
-      team_members.push(1); //Push the leader
-      globalTeamList = []; //limpieamos el arreglo
-      
-      formar_equipos(1,team_members,1,visit,allEmployees,5);
+        if(!error){
+            //Metemos las habilidades de cada empleado
+            //Tambien inicializamos el areglo de visitados
+            results.forEach(function(element) {
+                if(!(element.idEmpleado in habilidades)){
+                  habilidades[element.idEmpleado] = [];
+                  //Es un nuevo empleado, lo marcamos como no visitado
+                  visit[element.idEmpleado] = false;
+                  empleados.push(element.idEmpleado);
+                }
+                //Insertamos una nueva habilidad del empleado
+                habilidades[element.idEmpleado].push(element.idTool);
+            });
+            
+            //Obtenemos la lista de empleados compatibles por cada eneatipo
+            sqlQuery = "call OBTENER_COMPATIBILIDAD();";
+            connection = mysql.createConnection(config);
+            let ListaCompatibles;
+            connection.query(sqlQuery,(error,results,fields)=>{
+                if(!error){
+                    ListaCompatibles = [{"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[],"9":[]}];
+                    eneatipo = 1;
+                    for(i = 0; i < results[0].length; i++){               
+                    //console.log(results[0][i].eneatipo + " " + results[0][i].eneatipoCompatible);
+                        switch(results[0][i].eneatipo){
+                            case 1:{ListaCompatibles[0][1].push(results[0][i].eneatipoCompatible);break;}
+                            case 2:{ListaCompatibles[0][2].push(results[0][i].eneatipoCompatible);break;}
+                            case 3:{ListaCompatibles[0][3].push(results[0][i].eneatipoCompatible);break;}
+                            case 4:{ListaCompatibles[0][4].push(results[0][i].eneatipoCompatible);break;}
+                            case 5:{ListaCompatibles[0][5].push(results[0][i].eneatipoCompatible);break;}
+                            case 6:{ListaCompatibles[0][6].push(results[0][i].eneatipoCompatible);break;}
+                            case 7:{ListaCompatibles[0][7].push(results[0][i].eneatipoCompatible);break;}
+                            case 8:{ListaCompatibles[0][8].push(results[0][i].eneatipoCompatible);break;}
+                            case 9:{ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible);break;}
+                        }      
+                    }
+                    let idTeamLeader = 88;//req.params.idLeader;
+                    //Metemos el líder al equipo
+                    team_members.push(idTeamLeader);
+                    //Marcamos al líder como visitado
+                    visit[idTeamLeader] = true;
+                    //funcionDePrueba(1,team_members,1,visit,empleados,5);
+                    formar_equipos(1,team_members,1,visit,empleados,5);
+                }
+            });
+        }   
     });
+    res.send("Ya acabé jejeje")
 });
-  
+// function funcionDePrueba(team_length,team_members, nodo, visit,compatibles,N){ 
+//     if(team_length>N)
+//         return;
+//     if(team_length ==N){
+//         console.log("TEAM FOUND");
+//         console.log(team_members);
+//         return;
+//     }
+//     let sqlQuery = "SElECT * FROM empleado;";
+//     connection = mysql.createConnection(config);
+//     connection.query(sqlQuery,[],(error,results,fields)=>{
+//         let ids =[];
+//         results.forEach(function(element){
+//             ids.push(element.idEmpleado)
+//         });
+//         console.log(ids);
+//         team_members.push(idss[0]);
+//         funcionDePrueba(team_length+1,team_members,1,visit,ids,5);
+//     });
+// }  
 function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){ 
     //If we are in a sheet node means we have a team formed
     //So we return that team
@@ -128,7 +176,7 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
     let T = 0; //Heurística de Majo de Tools 
     
   }
-  function GETEmployees(){
+  function GetEmployees(){
     sqlQuery = "SELECT Empleado.idEmpleado FROM Empleado;";
     connection = mysql.createConnection(config);
     connection.query(sqlQuery,(error,results,fields)=>{
