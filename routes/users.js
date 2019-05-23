@@ -31,6 +31,20 @@ router.post('/time', function(req, res, next) {
   //res.send(":D");
 });*/
 
+router.post('/projectVsTool',function(req,res){  
+  idProyecto = req.body.idProyecto;
+  sqlQuery = "SELECT Project.nombre, Tool.idTool FROM Project INNER JOIN ProjectVSLoss ON Project.idProject = ProjectVSLoss.Project_idProject INNER JOIN Loss ON ProjectVSLoss.Loss_idLoss = Loss.idLoss INNER JOIN LossVSTool ON Loss.idLoss = LossVSTool.idLoss INNER JOIN Tool ON LossVSTool.idTool = Tool.idTool WHERE Project.idProject = ?;";
+  connection = mysql.createConnection(config);
+  connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{
+  if(error)
+  {
+    console.log(error);
+  }      
+    res.send(results);  
+  });
+});
+
+
 router.post('/formarEquipos',function(req,res){  
   res.send(req.body.idLeader + " " + req.body.tamano);
 });
