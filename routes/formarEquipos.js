@@ -15,12 +15,13 @@ const MinHeap = new Heap(function cmp(a, b) {
   }
   return 0;
 });
+var habilidades = [];
+var habilidades_proyecto = [];
 var globalTeamList = [];
 router.get('/',function(req,res,next){
     //Obtenemos todas las tools de cada uno de los empleados
     //let empleados = [];
     
-    let habilidades = [];
     let team_members = {};
     let visit = {}; //Nuestro arreglo de visitados
     sqlQuery = "SElECT empleadovstool.idEmpleadoVSToolcol,empleadovstool.idEmpleado,empleadovstool.idTool, Tool.idLevelTool FROM empleadovstool INNER JOIN Tool ON EmpleadoVSTooL.idTool = Tool.idTool;";
@@ -31,15 +32,15 @@ router.get('/',function(req,res,next){
             //Tambien inicializamos el areglo de visitados
             results.forEach(function(element) {
                 if(!(element.idEmpleado in habilidades)){
-                  habilidades[element.idEmpleado] = [];
+                  habilidades[element.idEmpleado] = {};
                   //Es un nuevo empleado, lo marcamos como no visitado
                   visit[element.idEmpleado] = false;
                   //empleados.push(element.idEmpleado);
                 }
-                //Insertamos una nueva habilidad del empleado
-                habilidades[element.idEmpleado].push(element.idTool);
+                //Insertamos una nueva habilidad del empleado con el nivel respectivo
+                habilidades[element.idEmpleado][element.idTool] = element.idLevelTool;
             });
-            
+            //console.log(habilidades[88]);
             //Obtenemos la lista de empleados compatibles por cada eneatipo
             sqlQuery = "call OBTENER_COMPATIBILIDAD();";
             connection = mysql.createConnection(config);
@@ -129,7 +130,7 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
         let tmS = JSON.stringify(tm);
         let nodo ={
             "key":tmS,
-            "h":CalcularHeuristica(team_members)
+            "h":CalcularHeuristica(tm)
         }
         if(MinHeap.size()>10)
             MinHeap.pushpop(nodo);
@@ -191,9 +192,32 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
   }
   function CalcularHeuristica(team_members){
     let H = 0; //Heurística Total
-    let C = 0; //Heurística de Compatibilidad
-    let T = 0; //Heurística de Majo de Tools 
-    return  Math.random() * (100 - 5) + 5;
+    
+    let keys = Object.keys(team_members);
+    let employees = {};
+    keys.forEach(function(idEmpleado){
+        if(!(idEmpleado in employees))
+            employees[idEmpleado]=1;
+        team_members[idEmpleado].forEach(function(sub){
+            if(!(sub.toString() in employees))
+                employees[sub.toString()] =1;
+        })
+    });
+    let team_habilidades_level =  {};
+    let manejo_tool;
+    habilidades_proyecto.forEach(function(tool){
+        manejo_tool = 0;
+        Object.keys(employees).forEach(function(employee){
+            if(tool in habilidades[employee]){
+                manejo_tool += habilidades[employee][tool];
+                //console.log(habilidades[employee][tool]);
+            }
+        });
+        team_habilidades_level[tool]= manejo_tool/Object.keys(employees).length;
+        H+=team_habilidades_level[tool];
+    });
+    H /=habilidades_proyecto.length;
+    return  H;
   }
   module.exports = router;
   
