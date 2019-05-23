@@ -31,6 +31,10 @@ router.post('/time', function(req, res, next) {
   //res.send(":D");
 });*/
 
+router.post('/formarEquipos',function(req,res){  
+  res.send(req.body.idLeader + " " + req.body.tamano);
+});
+
 router.post('/empleades',function(req,res){
   sqlQuery = "SELECT Empleado.idEmpleado FROM Empleado;";
   connection = mysql.createConnection(config);
