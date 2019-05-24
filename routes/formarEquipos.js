@@ -235,18 +235,7 @@ function CalcularHeuristica(team_members) {
         team_habilidades_level[tool] = manejo_tool / Object.keys(employees).length;
         H += team_habilidades_level[tool];
     });
-<<<<<<< HEAD
-    H /=habilidades_proyecto.length;
-    //return  H;
-    let high = 50;
-    let low = 30;
-    return Math.random() * (high - low) + low;
-  }
-  module.exports = router;
-  
-=======
     H /= habilidades_proyecto.length;
     return H;
 }
 module.exports = router;
->>>>>>> 112d31cf3a57c6deeb4769a18503882b986bcc4b
