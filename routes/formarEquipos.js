@@ -81,7 +81,7 @@ router.get('/',function(req,res,next){
                             let N = 5;//req.params.LengthTeam;
                             
                             let idProyecto = 1; //req.params.idProyecto
-                            sqlQuery = ""; //Aquí va la consulta para obtener las tools que necesita un proyecto
+                            sqlQuery = "AQUI URIS"; //Aquí va la consulta para obtener las tools que necesita un proyecto
                             connection = mysql.createConnection(config);
                             connection.query(sqlQuery,(error,results,fields)=>{ 
                                 results.forEach(function(it){
