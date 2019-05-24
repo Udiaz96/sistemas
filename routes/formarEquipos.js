@@ -6,6 +6,7 @@ const Combinatorics = require('js-combinatorics');
 const Heap = require('heap');
 let ListaCompatibles;
 const TablaEmpleadoIsEneatipo = {};
+const TablaIdEmpleadoToName = {};
 const MinHeap = new Heap(function cmp(a, b) {
   if (a.h < b.h) {
     return -1;
@@ -17,7 +18,6 @@ const MinHeap = new Heap(function cmp(a, b) {
 });
 var habilidades = [];
 var habilidades_proyecto = [];
-var globalTeamList = [];
 router.get('/',function(req,res,next){
     //Obtenemos todas las tools de cada uno de los empleados
     //let empleados = [];
@@ -68,6 +68,7 @@ router.get('/',function(req,res,next){
                         if(!error){
                             results.forEach(function(element){
                                 TablaEmpleadoIsEneatipo[element.idEmpleado] = element.idEneagrama;
+                                TablaIdEmpleadoToName[element.idEmpleado] = element.nombre;
                             });
                             //console.log(TablaEmpleadoIsEneatipo);
                             let eneatipo = TablaEmpleadoIsEneatipo[idTeamLeader];
@@ -78,22 +79,43 @@ router.get('/',function(req,res,next){
                             //console.log(compatibles);
                             //Marcamos al líder como visitado
                             visit[idTeamLeader] = true;
-                            let N = 5;//req.params.LengthTeam;
+                            let N = 4;//req.params.LengthTeam;
                             
-                            let idProyecto = 1; //req.params.idProyecto
-                            sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
-                            connection = mysql.createConnection(config);
-                            connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
-                                results.forEach(function(it){
-                                    habilidades_proyecto.push[it.idTool];
-                                });
+                            let idProyecto =1; //req.params.idProyecto
+                            //sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
+                            //connection = mysql.createConnection(config);
+                            //connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
+                               // results.forEach(function(it){
+                                 //   habilidades_proyecto.push[it.idTool];
+                                //});
                                 formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
                                 //funcionDePrueba(1,team_members, idTeamLeader, visit,compatibles,N);
-                                //while(!MinHeap.empty()){
-                                    console.log(MinHeap.pop());
-                                    res.send(MinHeap);
-                                //}
-                            });
+                                let Equipos = MinHeap.toArray();
+                                // while(!MinHeap.empty()){
+                                //     //console.log(MinHeap.pop());
+                                //     //res.send(MinHeap);
+                                //     let aux = MinHeap.pop();
+                                //     Equipo.push(JSON.parseaux.key)
+                                // }
+                                let EquiposByName = [];
+                                
+                                Equipos.forEach(function(equipo){
+                                    let memebers = JSON.parse(equipo.key);
+                                    let nodo = {};
+                                    nodo['h'] = equipo.h;
+                                    Object.keys(memebers).forEach(function(lid){
+                                        nodo[TablaIdEmpleadoToName[lid]] = [];
+                                        memebers[lid].forEach(function(sub){
+                                            nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
+                                        })
+                                    });
+                                    EquiposByName.push(nodo);
+                                });
+                                console.log(Equipos);
+                                console.log("-------------");
+                                console.log(EquiposByName);
+                                //res.render('equipos', {equipos: EquiposByName});
+                            //});
                         }
                     });
                 }
@@ -102,28 +124,7 @@ router.get('/',function(req,res,next){
     });
     res.send("Ya acabé jejeje")
 });
-// function funcionDePrueba(team_length,team_members, nodo, visit,compatibles,N){ 
-//     if(team_length>N)
-//         return;
-//     if(team_length ==N){
-//         console.log("TEAM FOUND");
-//         console.log(team_members);
-//         return;
-//     }
-//     compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
-//     console.log(compatibles);
-//     // let sqlQuery = "SElECT * FROM empleado;";
-//     // connection = mysql.createConnection(config);
-//     // connection.query(sqlQuery,[],(error,results,fields)=>{
-//     //     let ids =[];
-//     //     results.forEach(function(element){
-//     //         ids.push(element.idEmpleado)
-//     //     });
-//     //     console.log(ids);
-//     //     team_members.push(idss[0]);
-//     //     funcionDePrueba(team_length+1,team_members,1,visit,ids,5);
-//     // });
-// }  
+ 
 function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){ 
     //If we are in a sheet node means we have a team formed
     //So we return that team
@@ -227,7 +228,10 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
         H+=team_habilidades_level[tool];
     });
     H /=habilidades_proyecto.length;
-    return  H;
+    //return  H;
+    let high = 50;
+    let low = 30;
+    return Math.random() * (high - low) + low;
   }
   module.exports = router;
   
