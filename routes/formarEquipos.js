@@ -81,9 +81,9 @@ router.get('/',function(req,res,next){
                             let N = 5;//req.params.LengthTeam;
                             
                             let idProyecto = 1; //req.params.idProyecto
-                            sqlQuery = "AQUI URIS"; //Aquí va la consulta para obtener las tools que necesita un proyecto
+                            sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
                             connection = mysql.createConnection(config);
-                            connection.query(sqlQuery,(error,results,fields)=>{ 
+                            connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
                                 results.forEach(function(it){
                                     habilidades_proyecto.push[it.idTool];
                                 });
