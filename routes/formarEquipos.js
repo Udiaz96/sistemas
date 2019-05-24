@@ -24,7 +24,7 @@ router.get('/',function(req,res,next){
     
     let team_members = {};
     let visit = {}; //Nuestro arreglo de visitados
-    sqlQuery = "SElECT empleadovstool.idEmpleadoVSToolcol,empleadovstool.idEmpleado,empleadovstool.idTool, Tool.nombre, Tool.idLevelTool FROM empleadovstool INNER JOIN Tool ON EmpleadoVSTooL.idTool = Tool.idTool;";
+    sqlQuery = "SElECT empleadovstool.idEmpleadoVSToolcol,empleadovstool.idEmpleado,empleadovstool.idTool,Tool.idLevelTool FROM empleadovstool INNER JOIN Tool ON EmpleadoVSTooL.idTool = Tool.idTool;";
     connection = mysql.createConnection(config);
     connection.query(sqlQuery,[],(error,results,fields)=>{
         if(!error){
