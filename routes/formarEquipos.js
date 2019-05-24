@@ -79,11 +79,21 @@ router.get('/',function(req,res,next){
                             //Marcamos al líder como visitado
                             visit[idTeamLeader] = true;
                             let N = 5;//req.params.LengthTeam;
-                            formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
-                            //funcionDePrueba(1,team_members, idTeamLeader, visit,compatibles,N);
-                            while(!MinHeap.empty()){
-                                console.log(MinHeap.pop());
-                            }
+                            
+                            let idProyecto = 1; //req.params.idProyecto
+                            sqlQuery = ""; //Aquí va la consulta para obtener las tools que necesita un proyecto
+                            connection = mysql.createConnection(config);
+                            connection.query(sqlQuery,(error,results,fields)=>{ 
+                                results.forEach(function(it){
+                                    habilidades_proyecto.push[it.idTool];
+                                });
+                                formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
+                                //funcionDePrueba(1,team_members, idTeamLeader, visit,compatibles,N);
+                                //while(!MinHeap.empty()){
+                                    console.log(MinHeap.pop());
+                                    res.send(MinHeap);
+                                //}
+                            });
                         }
                     });
                 }
@@ -132,7 +142,7 @@ function formar_equipos(team_length,team_members, nodo, visit,compatibles,N){
             "key":tmS,
             "h":CalcularHeuristica(tm)
         }
-        if(MinHeap.size()>10)
+        if(MinHeap.size()>4)
             MinHeap.pushpop(nodo);
         else
             MinHeap.push(nodo);
