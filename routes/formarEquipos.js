@@ -18,10 +18,9 @@ const MinHeap = new Heap(function cmp(a, b) {
 });
 var habilidades = [];
 var habilidades_proyecto = [];
-router.get('/',function(req,res,next){
+router.post('/',function(req,res,next){
     //Obtenemos todas las tools de cada uno de los empleados
     //let empleados = [];
-
     let team_members = {};
     let visit = {}; //Nuestro arreglo de visitados
     sqlQuery = "SElECT empleadovstool.idEmpleadoVSToolcol,empleadovstool.idEmpleado,empleadovstool.idTool,Tool.idLevelTool FROM empleadovstool INNER JOIN Tool ON EmpleadoVSTooL.idTool = Tool.idTool;";
@@ -70,7 +69,7 @@ router.get('/',function(req,res,next){
                                 { ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
                         }
                     }
-                    let idTeamLeader = data.idLeader; //req.params.idLeader;
+                    let idTeamLeader = 88;//req.params.idLeader;
                     sqlQuery = "SELECT * FROM empleado;";
                     connection = mysql.createConnection(config);
                     connection.query(sqlQuery, (error, results, fields) => {
@@ -91,21 +90,14 @@ router.get('/',function(req,res,next){
                             let N = 4;//req.params.LengthTeam;
                             
                             let idProyecto =1; //req.params.idProyecto
-                            //sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
-                            //connection = mysql.createConnection(config);
-                            //connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
-                               // results.forEach(function(it){
-                                 //   habilidades_proyecto.push[it.idTool];
-                                //});
+                            sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
+                            connection = mysql.createConnection(config);
+                            connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
+                               results.forEach(function(it){
+                                    habilidades_proyecto.push[it.idTool];
+                                });
                                 formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
-                                //funcionDePrueba(1,team_members, idTeamLeader, visit,compatibles,N);
                                 let Equipos = MinHeap.toArray();
-                                // while(!MinHeap.empty()){
-                                //     //console.log(MinHeap.pop());
-                                //     //res.send(MinHeap);
-                                //     let aux = MinHeap.pop();
-                                //     Equipo.push(JSON.parseaux.key)
-                                // }
                                 let EquiposByName = [];
                                 
                                 Equipos.forEach(function(equipo){
@@ -124,7 +116,7 @@ router.get('/',function(req,res,next){
                                 console.log("-------------");
                                 console.log(EquiposByName);
                                 res.render('index', {equipos: EquiposByName});
-                            //});
+                            });
                         }
                     });
                 }
