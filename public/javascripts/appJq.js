@@ -72,6 +72,8 @@ $(document).ready(function() {
         });
     });
 
+    ////////////////FORMA EQUIPOS
+
     $('#buttonIniciarEquipos').click(function() {
 
         empleado = $("#inputSelectLeader").val();
@@ -93,7 +95,78 @@ $(document).ready(function() {
             dataType: 'JSON',
             success: function(response) {
 
+                var output = [];
+                var contador = 0;
+
+
+                //ELIMINAMOS LAS h del response
+                for (let i = 0; i < response.length; i++) {
+
+                    delete response[i].h;
+
+                }
+
                 console.log(response);
+
+
+                //Primero Recorremos la response para sacar las keys y las values 
+                Object.entries(response).forEach(([key, value]) => {
+
+                    //Como en este punto las keys son las posiciones del arreglo y los values son un arreglo de json
+                    //volveremos a recorrerlo para tener un json final mas comodo de manipular
+                    Object.entries(value).forEach(([key, value]) => {
+
+                        console.log(key);
+                        console.log(value);
+
+                        //Agregamos las keys y los values en un arreglo final
+                        output.splice(contador, 0, {
+                            key: key,
+                            value: value
+                        });
+
+                        contador++;
+
+
+                    });
+
+                    console.log('------------------');
+
+
+
+                });
+
+                console.log('--OUTPUTFINAL--');
+                console.log(output);
+
+
+
+                //////CREACION DE TABLAS
+                /*for (let i = 0; i < output.length / 2; i++) {
+
+                    $('#contenedor-global').append(`
+
+                    <div class="row justify-content-center text-center">
+                      <div class="col-12">
+                          <h1 class="display-4">Equipo ${i}</h1>
+                      </div>
+                  </div>
+
+                      <div class="row justify-content-center mt-3 mb-3">
+                      <div class="col-12 card card-body">
+                          <table class="table table-striped" id="tablaEquipo-${i}">
+                              <thead>
+                                  
+                              </thead>
+                              <tbody>
+          
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  `);
+
+                }*/
 
             }
         });
