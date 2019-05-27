@@ -97,6 +97,7 @@ $(document).ready(function() {
 
                 var output = [];
                 var contador = 0;
+                var keys = [];
 
 
                 //ELIMINAMOS LAS h del response
@@ -121,16 +122,21 @@ $(document).ready(function() {
 
                         //Agregamos las keys y los values en un arreglo final
                         output.splice(contador, 0, {
-                            key: key,
-                            value: value
+                            key: [],
+                            value: []
                         });
 
-                        contador++;
+
+                        output[contador].key.push(key);
+                        output[contador].value.push(value);
+
+
 
 
                     });
 
                     console.log('------------------');
+                    contador++;
 
 
 
