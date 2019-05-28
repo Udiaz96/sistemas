@@ -18,7 +18,12 @@ const MinHeap = new Heap(function cmp(a, b) {
 });
 var habilidades = [];
 var habilidades_proyecto = [];
-router.post('/',function(req,res,next){
+router.post('/', function(req, res, next) {
+
+    console.log("ID LIDER: " + req.body.empleado);
+    console.log("LENGHT TEAM: " + req.body.tamano);
+    console.log("ID PROYECTO: " + req.body.idProyecto);
+
     //Obtenemos todas las tools de cada uno de los empleados
     //let empleados = [];
     let team_members = {};
@@ -27,6 +32,8 @@ router.post('/',function(req,res,next){
     connection = mysql.createConnection(config);
     connection.query(sqlQuery, [], (error, results, fields) => {
         if (!error) {
+
+
             //Metemos las habilidades de cada empleado
             //Tambien inicializamos el areglo de visitados
             results.forEach(function(element) {
@@ -69,7 +76,7 @@ router.post('/',function(req,res,next){
                                 { ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
                         }
                     }
-                    let idTeamLeader = 88;//req.params.idLeader;
+                    let idTeamLeader = req.body.idLeader; //req.params.idLeader;
                     sqlQuery = "SELECT * FROM empleado;";
                     connection = mysql.createConnection(config);
                     connection.query(sqlQuery, (error, results, fields) => {
@@ -87,35 +94,37 @@ router.post('/',function(req,res,next){
                             //console.log(compatibles);
                             //Marcamos al líder como visitado
                             visit[idTeamLeader] = true;
-                            let N = 4;//req.params.LengthTeam;
-                            
-                            let idProyecto =79; //req.params.idProyecto
+                            let N = req.body.LengthTeam; //req.params.LengthTeam;
+
+                            let idProyecto = req.body.idProyecto; //req.params.idProyecto
                             sqlQuery = "SELECT DATAWAREHOUSE.ID_TOOL FROM DATAWAREHOUSE WHERE DATAWAREHOUSE.ID_PROJECTO = ?;"; //Aquí va la consulta para obtener las tools que necesita un proyecto
                             connection = mysql.createConnection(config);
-                            connection.query(sqlQuery,[idProyecto],(error,results,fields)=>{ 
-                               results.forEach(function(it){
+                            connection.query(sqlQuery, [idProyecto], (error, results, fields) => {
+                                results.forEach(function(it) {
                                     habilidades_proyecto.push[it.idTool];
                                 });
-                                formar_equipos(1,team_members,idTeamLeader,visit,compatibles,N);
+                                formar_equipos(1, team_members, idTeamLeader, visit, compatibles, N);
                                 let Equipos = MinHeap.toArray();
                                 let EquiposByName = [];
-                                
-                                Equipos.forEach(function(equipo){
+
+                                Equipos.forEach(function(equipo) {
                                     let memebers = JSON.parse(equipo.key);
                                     let nodo = {};
                                     nodo['h'] = equipo.h;
-                                    Object.keys(memebers).forEach(function(lid){
+                                    Object.keys(memebers).forEach(function(lid) {
                                         nodo[TablaIdEmpleadoToName[lid]] = [];
-                                        memebers[lid].forEach(function(sub){
+                                        memebers[lid].forEach(function(sub) {
                                             nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
                                         })
                                     });
                                     EquiposByName.push(nodo);
                                 });
+                                console.log('-----EQUIPOS----')
                                 console.log(Equipos);
                                 console.log("-------------");
                                 console.log(EquiposByName);
-                                res.render('index', {equipos: EquiposByName});
+                                //res.render('index', { equipos: EquiposByName });
+                                res.json(EquiposByName);
                             });
                         }
                     });
@@ -123,7 +132,8 @@ router.post('/',function(req,res,next){
             });
         }
     });
-});  
+});
+
 function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) {
     //If we are in a sheet node means we have a team formed
     //So we return that team
