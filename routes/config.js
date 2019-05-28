@@ -1,9 +1,10 @@
 let config = {
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'unilever',
-    port: 8889,
+    //port: 8889, //Port para mac
+    port: 3306, //Port para windows
     multipleStatements: true
 };
 
