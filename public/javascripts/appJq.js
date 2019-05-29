@@ -113,6 +113,9 @@ $(document).ready(function() {
                 //Primero Recorremos la response para sacar las keys y las values 
                 Object.entries(response).forEach(([key, value]) => {
 
+                    console.log(key);
+                    console.log(value);
+
                     //Como en este punto las keys son las posiciones del arreglo y los values son un arreglo de json
                     //volveremos a recorrerlo para tener un json final mas comodo de manipular
                     Object.entries(value).forEach(([key, value]) => {
@@ -148,7 +151,9 @@ $(document).ready(function() {
 
 
                 //////CREACION DE TABLAS
-                /*for (let i = 0; i < output.length / 2; i++) {
+                for (let i = 0; i < output.length; i++) {
+
+                    //console.log(output[i].value[i]);
 
                     $('#contenedor-global').append(`
 
@@ -160,9 +165,13 @@ $(document).ready(function() {
 
                       <div class="row justify-content-center mt-3 mb-3">
                       <div class="col-12 card card-body">
-                          <table class="table table-striped" id="tablaEquipo-${i}">
+                          <table class="table table-striped tablaEquipo-${i}" id="tablaEquipo-${i}">
                               <thead>
-                                  
+                                <tr>
+                                  <td>${output[i].key}</td>
+                                  <td>${output[i].value}</td>
+                                </tr>
+                                
                               </thead>
                               <tbody>
           
@@ -172,7 +181,12 @@ $(document).ready(function() {
                   </div>
                   `);
 
-                }*/
+
+                    console.log($('#tablaEquipo-' + i));
+
+                }
+
+
 
             }
         });
