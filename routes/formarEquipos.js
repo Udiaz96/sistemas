@@ -16,12 +16,12 @@ const MinHeap = new Heap(function cmp(a, b) {
     }
     return 0;
 });
-var habilidades = [];
-var habilidades_proyecto = [];
+var habilidades = {};
+const habilidades_proyecto = [];
 router.post('/', function(req, res, next) {
 
-    console.log("ID LIDER: " + req.body.empleado);
-    console.log("LENGHT TEAM: " + req.body.tamano);
+    console.log("ID LIDER: " + req.body.idLeader);
+    console.log("LENGHT TEAM: " + req.body.LengthTeam);
     console.log("ID PROYECTO: " + req.body.idProyecto);
 
     //Obtenemos todas las tools de cada uno de los empleados
@@ -101,7 +101,7 @@ router.post('/', function(req, res, next) {
                             connection = mysql.createConnection(config);
                             connection.query(sqlQuery, [idProyecto], (error, results, fields) => {
                                 results.forEach(function(it) {
-                                    habilidades_proyecto.push[it.idTool];
+                                    habilidades_proyecto.push(it.ID_TOOL);
                                 });
                                 formar_equipos(1, team_members, idTeamLeader, visit, compatibles, N);
                                 let Equipos = MinHeap.toArray();
@@ -213,7 +213,7 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
 
 function CalcularHeuristica(team_members) {
     let H = 0; //Heurística Total
-
+    //console.log("Habilidades on CH: ",habilidades_proyecto);
     let keys = Object.keys(team_members);
     let employees = {};
     keys.forEach(function(idEmpleado) {
@@ -229,10 +229,13 @@ function CalcularHeuristica(team_members) {
     habilidades_proyecto.forEach(function(tool) {
         manejo_tool = 0;
         Object.keys(employees).forEach(function(employee) {
-            if (tool in habilidades[employee]) {
-                manejo_tool += habilidades[employee][tool];
-                //console.log(habilidades[employee][tool]);
-            }
+            //console.log(employee);
+            //console.log(habilidades[employee]);
+            if(habilidades[employee]!=undefined)
+                if (tool in habilidades[employee]) {
+                    manejo_tool += habilidades[employee][tool];
+                    //console.log(habilidades[employee][tool]);
+                }
         });
         team_habilidades_level[tool] = manejo_tool / Object.keys(employees).length;
         H += team_habilidades_level[tool];
