@@ -8,12 +8,10 @@ let ListaCompatibles;
 const TablaEmpleadoIsEneatipo = {};
 const TablaIdEmpleadoToName = {};
 const MinHeap = new Heap(function cmp(a, b) {
-    if (a.h < b.h) {
+    if (a.h < b.h)
         return -1;
-    }
-    if (b.h < a.h) {
+    if (b.h < a.h) 
         return 1;
-    }
     return 0;
 });
 var habilidades = {};
@@ -76,6 +74,7 @@ router.post('/', function(req, res, next) {
                                 { ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
                         }
                     }
+                    //console.log(ListaCompatibles);
                     let idTeamLeader = req.body.idLeader; //req.params.idLeader;
                     sqlQuery = "SELECT * FROM empleado;";
                     connection = mysql.createConnection(config);
@@ -162,12 +161,11 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
     }
     //Otherwise we still trying to form teams
     let k = (N - team_length) >= 2 ? 2 : 1; //How many childs cant his node have 
-    //We are greedy an try to have allways 2 childs until is not possible
-    //let Combinatorics = require('js-combinatorics');
-    //console.log(compatibles);
-    ///console.log("type compatibles:",typeof compatibles);
+    //We are greedy an try to have allways 2 childs until is not possible anymore
+    
     let opciones = Combinatorics.bigCombination(compatibles, k); //We get []Ck combinatorics
     compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
+    //console.log(compatibles);
     if (k == 1) {
         while (a = opciones.next()) {
             let a_aux = a;
@@ -188,7 +186,7 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
         while (a = opciones.next()) {
             let a_aux = a;
             if (!visit[a_aux[0]] && !visit[a_aux[1]]) {
-                if (!(nodo in team_members))
+                if (!(nodo in team_members)) //Initialize the node to put their childrens
                     team_members[nodo] = [];
                 team_members[nodo].push(a_aux[0]);
                 team_members[nodo].push(a_aux[1]);
