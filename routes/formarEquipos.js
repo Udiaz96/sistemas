@@ -57,23 +57,23 @@ router.post('/', function(req, res, next) {
                         //console.log(results[0][i].eneatipo + " " + results[0][i].eneatipoCompatible);
                         switch (results[0][i].eneatipo) {
                             case 1:
-                                { ListaCompatibles[0][1].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][1].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][1].push(results[0][i].eneatipoCompatible); break; }
                             case 2:
-                                { ListaCompatibles[0][2].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][2].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][2].push(results[0][i].eneatipoCompatible); break; }
                             case 3:
-                                { ListaCompatibles[0][3].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][3].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][3].push(results[0][i].eneatipoCompatible); break; }
                             case 4:
-                                { ListaCompatibles[0][4].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][4].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][4].push(results[0][i].eneatipoCompatible); break; }
                             case 5:
-                                { ListaCompatibles[0][5].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][5].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][5].push(results[0][i].eneatipoCompatible); break; }
                             case 6:
-                                { ListaCompatibles[0][6].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][6].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][6].push(results[0][i].eneatipoCompatible); break; }
                             case 7:
-                                { ListaCompatibles[0][7].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][7].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][7].push(results[0][i].eneatipoCompatible); break; }
                             case 8:
-                                { ListaCompatibles[0][8].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][8].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][8].push(results[0][i].eneatipoCompatible); break; }
                             case 9:
-                                { ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][9].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
                         }
                     }
                     let idTeamLeader = req.body.idLeader; //req.params.idLeader;
