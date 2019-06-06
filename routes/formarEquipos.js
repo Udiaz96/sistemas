@@ -106,15 +106,31 @@ router.post('/', function(req, res, next) {
                                 let Equipos = MinHeap.toArray();
                                 let EquiposByName = [];
 
+                                // Equipos.forEach(function(equipo) {
+                                //     let memebers = JSON.parse(equipo.key);
+                                //     let nodo = {};
+                                //     nodo['h'] = equipo.h;
+                                //     Object.keys(memebers).forEach(function(lid) {
+                                //         nodo[TablaIdEmpleadoToName[lid]] = [];
+                                //         memebers[lid].forEach(function(sub) {
+                                //             nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
+                                //         })
+                                //     });
+                                //     EquiposByName.push(nodo);
+                                // });
                                 Equipos.forEach(function(equipo) {
                                     let memebers = JSON.parse(equipo.key);
                                     let nodo = {};
                                     nodo['h'] = equipo.h;
+                                    nodo["key"] = [];
+                                    nodo["value"] = [];
                                     Object.keys(memebers).forEach(function(lid) {
-                                        nodo[TablaIdEmpleadoToName[lid]] = [];
-                                        memebers[lid].forEach(function(sub) {
-                                            nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
-                                        })
+                                        nodo["key"].push(TablaIdEmpleadoToName[lid]); //Push the lid in the key value
+                                        let sublid = [];
+                                        memebers[lid].forEach(function(sub) {    
+                                            sublid.push(TablaIdEmpleadoToName[sub]);
+                                        });
+                                        nodo["value"].push(sublid);
                                     });
                                     EquiposByName.push(nodo);
                                 });
@@ -122,6 +138,11 @@ router.post('/', function(req, res, next) {
                                 console.log(Equipos);
                                 console.log("-------------");
                                 console.log(EquiposByName);
+                                EquiposByName.forEach(function(element){
+                                    element["value"].forEach(function(arr){
+                                        console.log(arr);
+                                    });
+                                });
                                 //res.render('index', { equipos: EquiposByName });
                                 res.json(EquiposByName);
                             });
