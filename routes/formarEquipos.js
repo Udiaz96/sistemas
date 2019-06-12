@@ -8,20 +8,18 @@ let ListaCompatibles;
 const TablaEmpleadoIsEneatipo = {};
 const TablaIdEmpleadoToName = {};
 const MinHeap = new Heap(function cmp(a, b) {
-    if (a.h < b.h) {
+    if (a.h < b.h)
         return -1;
-    }
-    if (b.h < a.h) {
+    if (b.h < a.h) 
         return 1;
-    }
     return 0;
 });
-var habilidades = [];
-var habilidades_proyecto = [];
+var habilidades = {};
+const habilidades_proyecto = [];
 router.post('/', function(req, res, next) {
 
-    console.log("ID LIDER: " + req.body.empleado);
-    console.log("LENGHT TEAM: " + req.body.tamano);
+    console.log("ID LIDER: " + req.body.idLeader);
+    console.log("LENGHT TEAM: " + req.body.LengthTeam);
     console.log("ID PROYECTO: " + req.body.idProyecto);
 
     //Obtenemos todas las tools de cada uno de los empleados
@@ -57,25 +55,26 @@ router.post('/', function(req, res, next) {
                         //console.log(results[0][i].eneatipo + " " + results[0][i].eneatipoCompatible);
                         switch (results[0][i].eneatipo) {
                             case 1:
-                                { ListaCompatibles[0][1].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][1].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][1].push(results[0][i].eneatipoCompatible); break; }
                             case 2:
-                                { ListaCompatibles[0][2].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][2].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][2].push(results[0][i].eneatipoCompatible); break; }
                             case 3:
-                                { ListaCompatibles[0][3].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][3].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][3].push(results[0][i].eneatipoCompatible); break; }
                             case 4:
-                                { ListaCompatibles[0][4].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][4].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][4].push(results[0][i].eneatipoCompatible); break; }
                             case 5:
-                                { ListaCompatibles[0][5].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][5].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][5].push(results[0][i].eneatipoCompatible); break; }
                             case 6:
-                                { ListaCompatibles[0][6].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][6].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][6].push(results[0][i].eneatipoCompatible); break; }
                             case 7:
-                                { ListaCompatibles[0][7].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][7].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][7].push(results[0][i].eneatipoCompatible); break; }
                             case 8:
-                                { ListaCompatibles[0][8].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][8].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][8].push(results[0][i].eneatipoCompatible); break; }
                             case 9:
-                                { ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
+                                { if(!ListaCompatibles[0][9].includes(results[0][i].eneatipoCompatible)) ListaCompatibles[0][9].push(results[0][i].eneatipoCompatible); break; }
                         }
                     }
+                    //console.log(ListaCompatibles);
                     let idTeamLeader = req.body.idLeader; //req.params.idLeader;
                     sqlQuery = "SELECT * FROM empleado;";
                     connection = mysql.createConnection(config);
@@ -101,21 +100,37 @@ router.post('/', function(req, res, next) {
                             connection = mysql.createConnection(config);
                             connection.query(sqlQuery, [idProyecto], (error, results, fields) => {
                                 results.forEach(function(it) {
-                                    habilidades_proyecto.push[it.idTool];
+                                    habilidades_proyecto.push(it.ID_TOOL);
                                 });
                                 formar_equipos(1, team_members, idTeamLeader, visit, compatibles, N);
                                 let Equipos = MinHeap.toArray();
                                 let EquiposByName = [];
 
+                                // Equipos.forEach(function(equipo) {
+                                //     let memebers = JSON.parse(equipo.key);
+                                //     let nodo = {};
+                                //     nodo['h'] = equipo.h;
+                                //     Object.keys(memebers).forEach(function(lid) {
+                                //         nodo[TablaIdEmpleadoToName[lid]] = [];
+                                //         memebers[lid].forEach(function(sub) {
+                                //             nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
+                                //         })
+                                //     });
+                                //     EquiposByName.push(nodo);
+                                // });
                                 Equipos.forEach(function(equipo) {
                                     let memebers = JSON.parse(equipo.key);
                                     let nodo = {};
                                     nodo['h'] = equipo.h;
+                                    nodo["key"] = [];
+                                    nodo["value"] = [];
                                     Object.keys(memebers).forEach(function(lid) {
-                                        nodo[TablaIdEmpleadoToName[lid]] = [];
-                                        memebers[lid].forEach(function(sub) {
-                                            nodo[TablaIdEmpleadoToName[lid]].push(TablaIdEmpleadoToName[sub]);
-                                        })
+                                        nodo["key"].push(TablaIdEmpleadoToName[lid]); //Push the lid in the key value
+                                        let sublid = [];
+                                        memebers[lid].forEach(function(sub) {    
+                                            sublid.push(TablaIdEmpleadoToName[sub]);
+                                        });
+                                        nodo["value"].push(sublid);
                                     });
                                     EquiposByName.push(nodo);
                                 });
@@ -123,6 +138,11 @@ router.post('/', function(req, res, next) {
                                 console.log(Equipos);
                                 console.log("-------------");
                                 console.log(EquiposByName);
+                                EquiposByName.forEach(function(element){
+                                    element["value"].forEach(function(arr){
+                                        console.log(arr);
+                                    });
+                                });
                                 //res.render('index', { equipos: EquiposByName });
                                 res.json(EquiposByName);
                             });
@@ -162,12 +182,11 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
     }
     //Otherwise we still trying to form teams
     let k = (N - team_length) >= 2 ? 2 : 1; //How many childs cant his node have 
-    //We are greedy an try to have allways 2 childs until is not possible
-    //let Combinatorics = require('js-combinatorics');
-    //console.log(compatibles);
-    ///console.log("type compatibles:",typeof compatibles);
+    //We are greedy an try to have allways 2 childs until is not possible anymore
+    
     let opciones = Combinatorics.bigCombination(compatibles, k); //We get []Ck combinatorics
     compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
+    //console.log(compatibles);
     if (k == 1) {
         while (a = opciones.next()) {
             let a_aux = a;
@@ -188,7 +207,7 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
         while (a = opciones.next()) {
             let a_aux = a;
             if (!visit[a_aux[0]] && !visit[a_aux[1]]) {
-                if (!(nodo in team_members))
+                if (!(nodo in team_members)) //Initialize the node to put their childrens
                     team_members[nodo] = [];
                 team_members[nodo].push(a_aux[0]);
                 team_members[nodo].push(a_aux[1]);
@@ -213,7 +232,7 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
 
 function CalcularHeuristica(team_members) {
     let H = 0; //Heurística Total
-
+    //console.log("Habilidades on CH: ",habilidades_proyecto);
     let keys = Object.keys(team_members);
     let employees = {};
     keys.forEach(function(idEmpleado) {
@@ -229,10 +248,13 @@ function CalcularHeuristica(team_members) {
     habilidades_proyecto.forEach(function(tool) {
         manejo_tool = 0;
         Object.keys(employees).forEach(function(employee) {
-            if (tool in habilidades[employee]) {
-                manejo_tool += habilidades[employee][tool];
-                //console.log(habilidades[employee][tool]);
-            }
+            //console.log(employee);
+            //console.log(habilidades[employee]);
+            if(habilidades[employee]!=undefined)
+                if (tool in habilidades[employee]) {
+                    manejo_tool += habilidades[employee][tool];
+                    //console.log(habilidades[employee][tool]);
+                }
         });
         team_habilidades_level[tool] = manejo_tool / Object.keys(employees).length;
         H += team_habilidades_level[tool];
