@@ -95,65 +95,11 @@ $(document).ready(function() {
             dataType: 'JSON',
             success: function(response) {
 
-                var output = [];
-                var contador = 0;
-                var keys = [];
-
-
-                //ELIMINAMOS LAS h del response
-                for (let i = 0; i < response.length; i++) {
-
-                    delete response[i].h;
-
-                }
-
                 console.log(response);
 
 
-                //Primero Recorremos la response para sacar las keys y las values 
-                Object.entries(response).forEach(([key, value]) => {
-
-                    console.log(key);
-                    console.log(value);
-
-                    //Como en este punto las keys son las posiciones del arreglo y los values son un arreglo de json
-                    //volveremos a recorrerlo para tener un json final mas comodo de manipular
-                    Object.entries(value).forEach(([key, value]) => {
-
-                        console.log(key);
-                        console.log(value);
-
-                        //Agregamos las keys y los values en un arreglo final
-                        output.splice(contador, 0, {
-                            key: [],
-                            value: []
-                        });
-
-
-                        output[contador].key.push(key);
-                        output[contador].value.push(value);
-
-
-
-
-                    });
-
-                    console.log('------------------');
-                    contador++;
-
-
-
-                });
-
-                console.log('--OUTPUTFINAL--');
-                console.log(output);
-
-
-
                 //////CREACION DE TABLAS
-                for (let i = 0; i < output.length; i++) {
-
-                    //console.log(output[i].value[i]);
+                for (let i = 0; i < response.length; i++) {
 
                     $('#contenedor-global').append(`
 
@@ -166,31 +112,139 @@ $(document).ready(function() {
                       <div class="row justify-content-center mt-3 mb-3">
                       <div class="col-12 card card-body">
                           <table class="table table-striped tablaEquipo-${i}" id="tablaEquipo-${i}">
-                              <thead>
-                                <tr>
-                                  <td>${output[i].key}</td>
-                                  <td>${output[i].value}</td>
-                                </tr>
-                                
-                              </thead>
-                              <tbody>
-          
-                              </tbody>
+                            
+
+                         
                           </table>
                       </div>
                   </div>
                   `);
 
+                }
 
-                    console.log($('#tablaEquipo-' + i));
+                //Agregamos las Filas para cada equipo, SOLO LAS FILAS, esto para los lideres
+                for (let i = 0; i < response[0].key.length; i++) {
+
+                    $('#tablaEquipo-0').append(`<tr class="row-${i}"></tr>`);
 
                 }
+
+                for (let i = 0; i < response[1].key.length; i++) {
+
+                    $('#tablaEquipo-1').append(`<tr class="row-${i}"></tr>`);
+
+                }
+
+                for (let i = 0; i < response[2].key.length; i++) {
+
+                    $('#tablaEquipo-2').append(`<tr class="row-${i}"></tr>`);
+
+                }
+
+                for (let i = 0; i < response[3].key.length; i++) {
+
+                    $('#tablaEquipo-3').append(`<tr class="row-${i}"></tr>`);
+
+                }
+
+                for (let i = 0; i < response[4].key.length; i++) {
+
+                    $('#tablaEquipo-4').append(`<tr class="row-${i}"></tr>`);
+
+                }
+
+
+
+                //////LIDERES
+                //Agregamos el contenido de las Filas, los lideres y el resto del equipo
+                for (let i = 0; i < response[0].key.length; i++) {
+
+                    $('#tablaEquipo-0 tr.row-' + i).append(`<td>${response[0].key[i]}</td>`);
+
+
+                }
+
+                for (let i = 0; i < response[1].key.length; i++) {
+
+                    $('#tablaEquipo-1 tr.row-' + i).append(`<td>${response[1].key[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[2].key.length; i++) {
+
+                    $('#tablaEquipo-2 tr.row-' + i).append(`<td>${response[2].key[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[3].key.length; i++) {
+
+                    $('#tablaEquipo-3 tr.row-' + i).append(`<td>${response[3].key[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[4].key.length; i++) {
+
+                    $('#tablaEquipo-4 tr.row-' + i).append(`<td>${response[4].key[i]}</td>`);
+
+                }
+
+                //////RESTO DEL EQUIPO
+                for (let i = 0; i < response[0].value.length; i++) {
+
+                    $('#tablaEquipo-0 tr.row-' + i).append(`<td>${response[0].value[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[1].value.length; i++) {
+
+                    $('#tablaEquipo-1 tr.row-' + i).append(`<td>${response[1].value[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[2].value.length; i++) {
+
+                    $('#tablaEquipo-2 tr.row-' + i).append(`<td>${response[2].value[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[3].value.length; i++) {
+
+                    $('#tablaEquipo-3 tr.row-' + i).append(`<td>${response[3].value[i]}</td>`);
+
+                }
+
+                for (let i = 0; i < response[4].value.length; i++) {
+
+                    $('#tablaEquipo-4 tr.row-' + i).append(`<td>${response[4].value[i]}</td>`);
+
+                }
+
+
+
+                response.forEach(function(element, index) {
+                    console.log(index);
+                    console.log(element.key);
+
+                });
+
+
+
+                //Data Tables
+                /*$('#tablaEquipo-0').DataTable();
+                $('#tablaEquipo-1').DataTable();
+                $('#tablaEquipo-2').DataTable();
+                $('#tablaEquipo-3').DataTable();
+                $('#tablaEquipo-4').DataTable();*/
+
+
 
 
 
             }
         });
     });
+
+
 
     $("#inputSelectLeader").change(function() {
         empleado = $("#inputSelectLeader").val();
