@@ -7,7 +7,7 @@ const Heap = require('heap');
 let ListaCompatibles;
 const TablaEmpleadoIsEneatipo = {};
 const TablaIdEmpleadoToName = {};
-const MinHeap = new Heap(function cmp(a, b) {
+const MinHeap = new Heap(function cmp( a, b) {
     if (a.h < b.h)
         return -1;
     if (b.h < a.h) 
@@ -132,7 +132,8 @@ router.post('/', function(req, res, next) {
                                         });
                                         nodo["value"].push(sublid);
                                     });
-                                    EquiposByName.push(nodo);
+                                    if(!EquiposByName.includes(nodo))
+                                        EquiposByName.push(nodo);
                                 });
                                 console.log('-----EQUIPOS----')
                                 console.log(Equipos);
@@ -166,16 +167,33 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
         //console.log(team_members);
         //console.log(JSON.stringify(team_members));
         let tm = Object.assign({}, team_members);
+
+        let equipos_aux = MinHeap.toArray();
         //TeamList.push(tm);
         let tmS = JSON.stringify(tm);
+        let flag = false;
+        //console.log("nuevo team formado",tmS)
+        equipos_aux.forEach(function(element){
+            //console.log(element.key)
+            if(element.key==tmS){
+                flag = true;
+                //console.log("Se repitió uno")
+            }           
+        });
+        if(flag) //if the team already exist in the heap return
+            return;
         let nodo = {
             "key": tmS,
             "h": CalcularHeuristica(tm)
         }
+        
+        //console.log(equipos_aux);
+        
         if (MinHeap.size() > 4)
-            MinHeap.pushpop(nodo);
+            MinHeap.pushpop(nodo);    
         else
             MinHeap.push(nodo);
+        MinHeap.heapify();
         //console.log("after push: ",team_members);
         return;
         //return team_members;
@@ -185,7 +203,6 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
     //We are greedy an try to have allways 2 childs until is not possible anymore
     
     let opciones = Combinatorics.bigCombination(compatibles, k); //We get []Ck combinatorics
-    compatibles = ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo]];
     //console.log(compatibles);
     if (k == 1) {
         while (a = opciones.next()) {
@@ -197,7 +214,7 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
                 visit[a_aux[0]] = true;
                 team_length = team_length + 1;
                 let nodo_aux = a_aux[0];
-                formar_equipos(team_length, team_members, nodo_aux, visit, compatibles, N);
+                formar_equipos(team_length, team_members, nodo_aux, visit, ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo_aux]], N);
                 delete team_members[nodo];
                 visit[a_aux[0]] = false;
                 team_length = team_length - 1;
@@ -215,10 +232,11 @@ function formar_equipos(team_length, team_members, nodo, visit, compatibles, N) 
                 let nodo_aux = a_aux[0];
                 team_length = team_length + 2;
                 //console.log("Log before 1st rescursive call",a_aux);
-                formar_equipos(team_length, team_members, nodo_aux, visit, compatibles, N);
+                formar_equipos(team_length, team_members, nodo_aux, visit, ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo_aux]], N);
                 nodo_aux = a_aux[1];
                 //console.log("Log before 2nd rescursive call",a_aux);
-                formar_equipos(team_length, team_members, nodo_aux, visit, compatibles, N);
+                formar_equipos(team_length, team_members, nodo_aux, visit, ListaCompatibles[0][TablaEmpleadoIsEneatipo[nodo_aux]], N);
+                //console.log(team_members[nodo]);
                 delete team_members[nodo];
                 //console.log("Despuerte de vaciar",team_members);
                 team_length = team_length - 2;
