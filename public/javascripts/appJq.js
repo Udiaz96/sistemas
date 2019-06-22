@@ -95,6 +95,8 @@ $(document).ready(function() {
             dataType: 'JSON',
             success: function(response) {
 
+                $('.eliminar').remove();
+
                 console.log(response);
 
 
@@ -103,17 +105,28 @@ $(document).ready(function() {
 
                     $('#contenedor-global').append(`
 
-                    <div class="row justify-content-center text-center">
+                    <div class="row justify-content-center text-center eliminar">
                       <div class="col-12">
                           <h1 class="display-4">Equipo ${i}</h1>
                       </div>
                   </div>
 
-                      <div class="row justify-content-center mt-3 mb-3">
+                      <div class="row justify-content-center mt-3 mb-3 eliminar">
                       <div class="col-12 card card-body">
                           <table class="table table-striped tablaEquipo-${i}" id="tablaEquipo-${i}">
-                            
 
+
+                            <thead>
+                            <tr>
+                            
+                                <th scope="col">Lider del equipo</th>
+                                <th scope="col">Integrantes</th>
+                               
+                            </tr>
+                            </thead>
+                            
+                            <tbody>
+                            </tbody>
                          
                           </table>
                       </div>
@@ -125,31 +138,31 @@ $(document).ready(function() {
                 //Agregamos las Filas para cada equipo, SOLO LAS FILAS, esto para los lideres
                 for (let i = 0; i < response[0].key.length; i++) {
 
-                    $('#tablaEquipo-0').append(`<tr class="row-${i}"></tr>`);
+                    $('#tablaEquipo-0 tbody').append(`<tr class="row-${i}"></tr>`);
 
                 }
 
                 for (let i = 0; i < response[1].key.length; i++) {
 
-                    $('#tablaEquipo-1').append(`<tr class="row-${i}"></tr>`);
+                    $('#tablaEquipo-1 tbody').append(`<tr class="row-${i}"></tr>`);
 
                 }
 
                 for (let i = 0; i < response[2].key.length; i++) {
 
-                    $('#tablaEquipo-2').append(`<tr class="row-${i}"></tr>`);
+                    $('#tablaEquipo-2 tbody').append(`<tr class="row-${i}"></tr>`);
 
                 }
 
                 for (let i = 0; i < response[3].key.length; i++) {
 
-                    $('#tablaEquipo-3').append(`<tr class="row-${i}"></tr>`);
+                    $('#tablaEquipo-3 tbody').append(`<tr class="row-${i}"></tr>`);
 
                 }
 
                 for (let i = 0; i < response[4].key.length; i++) {
 
-                    $('#tablaEquipo-4').append(`<tr class="row-${i}"></tr>`);
+                    $('#tablaEquipo-4 tbody').append(`<tr class="row-${i}"></tr>`);
 
                 }
 
@@ -159,63 +172,63 @@ $(document).ready(function() {
                 //Agregamos el contenido de las Filas, los lideres y el resto del equipo
                 for (let i = 0; i < response[0].key.length; i++) {
 
-                    $('#tablaEquipo-0 tr.row-' + i).append(`<td>${response[0].key[i]}</td>`);
+                    $('#tablaEquipo-0 tbody tr.row-' + i).append(`<td>${response[0].key[i]}</td>`);
 
 
                 }
 
                 for (let i = 0; i < response[1].key.length; i++) {
 
-                    $('#tablaEquipo-1 tr.row-' + i).append(`<td>${response[1].key[i]}</td>`);
+                    $('#tablaEquipo-1 tbody tr.row-' + i).append(`<td>${response[1].key[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[2].key.length; i++) {
 
-                    $('#tablaEquipo-2 tr.row-' + i).append(`<td>${response[2].key[i]}</td>`);
+                    $('#tablaEquipo-2 tbody tr.row-' + i).append(`<td>${response[2].key[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[3].key.length; i++) {
 
-                    $('#tablaEquipo-3 tr.row-' + i).append(`<td>${response[3].key[i]}</td>`);
+                    $('#tablaEquipo-3 tbody tr.row-' + i).append(`<td>${response[3].key[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[4].key.length; i++) {
 
-                    $('#tablaEquipo-4 tr.row-' + i).append(`<td>${response[4].key[i]}</td>`);
+                    $('#tablaEquipo-4 tbody tr.row-' + i).append(`<td>${response[4].key[i]}</td>`);
 
                 }
 
                 //////RESTO DEL EQUIPO
                 for (let i = 0; i < response[0].value.length; i++) {
 
-                    $('#tablaEquipo-0 tr.row-' + i).append(`<td>${response[0].value[i]}</td>`);
+                    $('#tablaEquipo-0 tbody tr.row-' + i).append(`<td>${response[0].value[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[1].value.length; i++) {
 
-                    $('#tablaEquipo-1 tr.row-' + i).append(`<td>${response[1].value[i]}</td>`);
+                    $('#tablaEquipo-1 tbody tr.row-' + i).append(`<td>${response[1].value[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[2].value.length; i++) {
 
-                    $('#tablaEquipo-2 tr.row-' + i).append(`<td>${response[2].value[i]}</td>`);
+                    $('#tablaEquipo-2 tbody tr.row-' + i).append(`<td>${response[2].value[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[3].value.length; i++) {
 
-                    $('#tablaEquipo-3 tr.row-' + i).append(`<td>${response[3].value[i]}</td>`);
+                    $('#tablaEquipo-3 tbody tr.row-' + i).append(`<td>${response[3].value[i]}</td>`);
 
                 }
 
                 for (let i = 0; i < response[4].value.length; i++) {
 
-                    $('#tablaEquipo-4 tr.row-' + i).append(`<td>${response[4].value[i]}</td>`);
+                    $('#tablaEquipo-4 tbody tr.row-' + i).append(`<td>${response[4].value[i]}</td>`);
 
                 }
 
@@ -230,11 +243,75 @@ $(document).ready(function() {
 
 
                 //Data Tables
-                /*$('#tablaEquipo-0').DataTable();
-                $('#tablaEquipo-1').DataTable();
-                $('#tablaEquipo-2').DataTable();
-                $('#tablaEquipo-3').DataTable();
-                $('#tablaEquipo-4').DataTable();*/
+                $('#tablaEquipo-0').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            title: 'Equipo 0'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Equipo 0'
+                        }
+                    ],
+                    "language": {
+                        "paginate": {
+                            "previous": "Anterior"
+                        }
+                    }
+                });
+
+                $('#tablaEquipo-1').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            title: 'Equipo 1'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Equipo 1'
+                        }
+                    ]
+                });
+
+                $('#tablaEquipo-2').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            title: 'Equipo 2'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Equipo 2'
+                        }
+                    ]
+                });
+
+                $('#tablaEquipo-3').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            title: 'Equipo 3'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Equipo 3'
+                        }
+                    ]
+                });
+
+                $('#tablaEquipo-4').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            title: 'Equipo 4'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Equipo 4'
+                        }
+                    ]
+                });
 
 
 
