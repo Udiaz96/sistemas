@@ -172,7 +172,7 @@ $(document).ready(function() {
                 //Agregamos el contenido de las Filas, los lideres y el resto del equipo
                 for (let i = 0; i < response[0].key.length; i++) {
                     if(response[0].idxLider == i)
-                        $('#tablaEquipo-0 tbody tr.row-' + i).append(`<td bgcolor="#1B84E7">${response[0].key[i]}</td>`);
+                        $('#tablaEquipo-0 tbody tr.row-' + i).append(`<td style="color:white;" bgcolor="#1B84E7"><strong>${response[0].key[i]}</strong></td>`);
                     else
                         $('#tablaEquipo-0 tbody tr.row-' + i).append(`<td>${response[0].key[i]}</td>`);
 
@@ -181,7 +181,7 @@ $(document).ready(function() {
 
                 for (let i = 0; i < response[1].key.length; i++) {
                     if(response[1].idxLider == i)
-                        $('#tablaEquipo-1 tbody tr.row-' + i).append(`<td bgcolor="#1B84E7">${response[1].key[i]}</td>`);
+                        $('#tablaEquipo-1 tbody tr.row-' + i).append(`<td style="color:white;" bgcolor="#1B84E7"><strong>${response[1].key[i]}</strong></td>`);
                     else
                         $('#tablaEquipo-1 tbody tr.row-' + i).append(`<td>${response[1].key[i]}</td>`);
 
@@ -189,7 +189,7 @@ $(document).ready(function() {
 
                 for (let i = 0; i < response[2].key.length; i++) {
                     if(response[2].idxLider == i)
-                        $('#tablaEquipo-2 tbody tr.row-' + i).append(`<td bgcolor="#1B84E7">${response[2].key[i]}</td>`);
+                        $('#tablaEquipo-2 tbody tr.row-' + i).append(`<td style="color:white;" bgcolor="#1B84E7"><strong>${response[2].key[i]}</strong></td>`);
                     else
                         $('#tablaEquipo-2 tbody tr.row-' + i).append(`<td>${response[2].key[i]}</td>`);
 
@@ -197,7 +197,7 @@ $(document).ready(function() {
 
                 for (let i = 0; i < response[3].key.length; i++) {
                     if(response[3].idxLider==i)                    
-                        $('#tablaEquipo-3 tbody tr.row-' + i).append(`<td bgcolor="#1B84E7">${response[3].key[i]}</td>`);
+                        $('#tablaEquipo-3 tbody tr.row-' + i).append(`<td style="color:white;" bgcolor="#1B84E7"><strong>${response[3].key[i]}</strong></td>`);
                     else
                         $('#tablaEquipo-3 tbody tr.row-' + i).append(`<td>${response[3].key[i]}</td>`);
 
@@ -206,7 +206,7 @@ $(document).ready(function() {
 
                 for (let i = 0; i < response[4].key.length; i++) {
                     if(response[4].idxLider==i)
-                        $('#tablaEquipo-4 tbody tr.row-' + i).append(`<td bgcolor="#1B84E7">${response[4].key[i]}</td>`);
+                        $('#tablaEquipo-4 tbody tr.row-' + i).append(`<td style="color:white;" bgcolor="#1B84E7"><strong>${response[4].key[i]}</strong></td>`);
                     else
                         $('#tablaEquipo-4 tbody tr.row-' + i).append(`<td>${response[4].key[i]}</td>`);
 
