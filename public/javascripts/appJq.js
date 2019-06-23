@@ -95,7 +95,13 @@ $(document).ready(function() {
             dataType: 'JSON',
             success: function(response) {
 
+
+
                 $('.eliminar').remove();
+                $('#tablaEquipo-1').remove();
+                $('#tablaEquipo-2').remove();
+                $('#tablaEquipo-3').remove();
+                $('#tablaEquipo-4').remove();
 
                 console.log(response);
 
@@ -267,7 +273,8 @@ $(document).ready(function() {
                     ],
                     "language": {
                         "paginate": {
-                            "previous": "Anterior"
+                            "previous": "Anterior",
+                            "next": "Siguiente"
                         }
                     }
                 });
@@ -282,7 +289,13 @@ $(document).ready(function() {
                             extend: 'pdfHtml5',
                             title: 'Equipo 1'
                         }
-                    ]
+                    ],
+                    "language": {
+                        "paginate": {
+                            "previous": "Anterior",
+                            "next": "Siguiente"
+                        }
+                    }
                 });
 
                 $('#tablaEquipo-2').DataTable({
@@ -295,7 +308,13 @@ $(document).ready(function() {
                             extend: 'pdfHtml5',
                             title: 'Equipo 2'
                         }
-                    ]
+                    ],
+                    "language": {
+                        "paginate": {
+                            "previous": "Anterior",
+                            "next": "Siguiente"
+                        }
+                    }
                 });
 
                 $('#tablaEquipo-3').DataTable({
@@ -308,7 +327,13 @@ $(document).ready(function() {
                             extend: 'pdfHtml5',
                             title: 'Equipo 3'
                         }
-                    ]
+                    ],
+                    "language": {
+                        "paginate": {
+                            "previous": "Anterior",
+                            "next": "Siguiente"
+                        }
+                    }
                 });
 
                 $('#tablaEquipo-4').DataTable({
@@ -321,10 +346,19 @@ $(document).ready(function() {
                             extend: 'pdfHtml5',
                             title: 'Equipo 4'
                         }
-                    ]
+                    ],
+                    "language": {
+                        "paginate": {
+                            "previous": "Anterior",
+                            "next": "Siguiente"
+                        }
+                    }
                 });
 
+                var divPosition = $('#tablaEquipo-0').offset();
 
+
+                $('html, body').animate({ scrollTop: divPosition.top - 300 }, "slow");
 
 
 
