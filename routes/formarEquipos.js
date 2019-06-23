@@ -122,12 +122,20 @@ router.post('/', function(req, res, next) {
                                     let memebers = JSON.parse(equipo.key);
                                     let nodo = {};
                                     nodo['h'] = equipo.h;
+                                    nodo['idxLider'] = -1;
                                     nodo["key"] = [];
                                     nodo["value"] = [];
+                                    let idx_Lider = -1;
                                     Object.keys(memebers).forEach(function(lid) {
+                                        idx_Lider++;
+                                        if(lid==idTeamLeader){
+                                            console.log("Lider juasjuas", idx_Lider)
+                                            nodo['idxLider'] = idx_Lider;
+                                        }
                                         nodo["key"].push(TablaIdEmpleadoToName[lid]); //Push the lid in the key value
                                         let sublid = [];
-                                        memebers[lid].forEach(function(sub) {    
+                                        
+                                        memebers[lid].forEach(function(sub) { 
                                             sublid.push(TablaIdEmpleadoToName[sub]);
                                         });
                                         nodo["value"].push(sublid);
@@ -139,11 +147,11 @@ router.post('/', function(req, res, next) {
                                 console.log(Equipos);
                                 console.log("-------------");
                                 console.log(EquiposByName);
-                                EquiposByName.forEach(function(element){
-                                    element["value"].forEach(function(arr){
-                                        console.log(arr);
-                                    });
-                                });
+                                // EquiposByName.forEach(function(element){
+                                //     element["value"].forEach(function(arr){
+                                //         console.log(arr);
+                                //     });
+                                // });
                                 //res.render('index', { equipos: EquiposByName });
                                 res.json(EquiposByName);
                             });
